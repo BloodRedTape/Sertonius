@@ -8,11 +8,11 @@ set(CMAKE_CXX_STANDARD 14)
 add_subdirectory(libs/StraitX-Base)
 
 set(SAMPLE_SOURCES
-    "./main.cpp"
-)
+    "sources/main.cpp"
+ "sources/application.cpp" "sources/render/renderer.cpp")
 
 set(SAMPLE_INCLUDE
-    "./"
+    "./sources"
 )
 
 add_executable(Sample ${SAMPLE_SOURCES})
