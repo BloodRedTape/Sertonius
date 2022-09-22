@@ -5,7 +5,7 @@ project(Sample)
 set(CMAKE_CXX_STANDARD_REQUIRED 14)
 set(CMAKE_CXX_STANDARD 14)
 
-add_subdirectory(StraitXPackages/Base)
+add_subdirectory(libs/StraitX-Base)
 
 set(SAMPLE_SOURCES
     "./main.cpp"

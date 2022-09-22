@@ -1,3 +1,3 @@
 [submodule "StraitXPackages/Base"]
-	path = StraitXPackages/Base
+	path = libs/StraitX-Base
 	url = https://github.com/StraitX/Base
