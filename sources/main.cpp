@@ -1,8 +1,9 @@
 #include <core/print.hpp>
+#include <core/os/directory.hpp>
 #include "application.hpp"
 
 int main(){
-	Println("Hello %", "World");
-
+	
+	Directory::Change("../../../");
 	Application().Run();
 }

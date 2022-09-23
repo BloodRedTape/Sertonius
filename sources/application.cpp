@@ -6,9 +6,21 @@ Application::Application(){
 
 void Application::Run(){
 
+	Mesh mesh({
+			Vertex{{ 0.5f, 0.5f, 0.f}},
+			Vertex{{-0.5f, 0.5f, 0.f}},
+			Vertex{{-0.5f,-0.5f, 0.f}},
+		}, 
+		{0, 1, 2}, 
+		AABB3f({}, {}), 
+		"Mesh"
+	);
+
 	while (m_Window.IsOpen()) {
+
+
 		if(m_IsFocused)
-			m_Renderer.Render(/*m_Scene*/);
+			m_Renderer.Render({ &mesh , 1});
 		m_Window.DispatchEvents();
 	}
 }

@@ -6,17 +6,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED 14)
 set(CMAKE_CXX_STANDARD 14)
 
 add_subdirectory(libs/StraitX-Base)
+add_subdirectory(libs/Assimp-FBXLoader)
 
 set(SAMPLE_SOURCES
     "sources/main.cpp"
- "sources/application.cpp" "sources/render/renderer.cpp")
+    "sources/render/mesh.cpp"
+ "sources/application.cpp" "sources/render/renderer.cpp" "sources/render/passes/geometry_pass.cpp" "sources/render/render_targets.cpp")
 
 set(SAMPLE_INCLUDE
     "./sources"
 )
 
 add_executable(Sample ${SAMPLE_SOURCES})
-target_link_libraries(Sample StraitXBase)
+target_link_libraries(Sample StraitXBase assimp-fbxloader)
 target_include_directories(Sample
     PUBLIC ${SAMPLE_INCLUDE}
 )

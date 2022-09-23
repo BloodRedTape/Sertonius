@@ -1,3 +1,6 @@
 [submodule "StraitXPackages/Base"]
 	path = libs/StraitX-Base
 	url = https://github.com/StraitX/Base
+[submodule "libs/Assimp-FBXLoader"]
+	path = libs/Assimp-FBXLoader
+	url = https://github.com/BloodRedTape/Assimp-FBXLoader
