@@ -5,11 +5,10 @@ Application::Application(){
 }
 
 void Application::Run(){
-	Semaphore acquire, present;
+
 	while (m_Window.IsOpen()) {
-		m_Window.AcquireNextFramebuffer(&acquire);
-		m_Renderer.Render(m_Window.CurrentFramebuffer(), &acquire, &present);
-		m_Window.PresentCurrentFramebuffer(&present);
+		if(m_IsFocused)
+			m_Renderer.Render(/*m_Scene*/);
 		m_Window.DispatchEvents();
 	}
 }
@@ -17,5 +16,9 @@ void Application::Run(){
 void Application::OnEvent(const Event& e){
 	if (e.Type == EventType::WindowClose)
 		m_Window.Close();
+	if (e.Type == EventType::FocusIn)
+		m_IsFocused = true;
+	if (e.Type == EventType::FocusOut)
+		m_IsFocused = false;
 }
 
