@@ -14,7 +14,7 @@ GeometryPass::GeometryPass(const RenderTargets& targets):
 	props.VertexAttributes = Vertex::AttributesList;
 	props.Shaders = shaders;
 	props.Layout = m_Layout.Get();
-	props.Pass = targets.Pass();
+	props.Pass = targets.GeometryRenderPass.Get();
 
 	m_Pipeline = GraphicsPipeline::Create(props);
 
@@ -23,11 +23,10 @@ GeometryPass::GeometryPass(const RenderTargets& targets):
 }
 
 void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, Span<Mesh> meshes){
-	cmd_buffer->ClearColor(m_RenderTargets.CurrentFramebuffer()->Attachments()[0], Color::Red);
 	cmd_buffer->SetViewport(0, 0, m_RenderTargets.Size().x, m_RenderTargets.Size().y);
 	cmd_buffer->SetScissor(0, 0, m_RenderTargets.Size().x, m_RenderTargets.Size().y);
 	cmd_buffer->Bind(m_Pipeline.Get());
-	cmd_buffer->BeginRenderPass(m_RenderTargets.Pass(), m_RenderTargets.CurrentFramebuffer());
+	cmd_buffer->BeginRenderPass(m_RenderTargets.GeometryRenderPass.Get(), m_RenderTargets.GeometryFrameBuffer.Get());
 	for (const Mesh& mesh : meshes)
 		mesh.CmdDraw(*cmd_buffer);
 	cmd_buffer->EndRenderPass();

@@ -16,11 +16,15 @@ void Application::Run(){
 		"Mesh"
 	);
 
+	List<Mesh> meshes;
+	meshes.Add(Move(mesh));
+	meshes.Add(Mesh::LoadFromFile("content/meshes/monkey.fbx"));
+
 	while (m_Window.IsOpen()) {
 
 
 		if(m_IsFocused)
-			m_Renderer.Render({ &mesh , 1});
+			m_Renderer.Render(meshes);
 		m_Window.DispatchEvents();
 	}
 }

@@ -11,7 +11,7 @@ add_subdirectory(libs/Assimp-FBXLoader)
 set(SAMPLE_SOURCES
     "sources/main.cpp"
     "sources/render/mesh.cpp"
- "sources/application.cpp" "sources/render/renderer.cpp" "sources/render/passes/geometry_pass.cpp" "sources/render/render_targets.cpp")
+ "sources/application.cpp" "sources/render/renderer.cpp" "sources/render/passes/geometry_pass.cpp" "sources/render/render_targets.cpp" "sources/render/passes/composite_pass.hpp" "sources/render/passes/composite_pass.cpp")
 
 set(SAMPLE_INCLUDE
     "./sources"

@@ -16,6 +16,60 @@ RenderTargets::RenderTargets(const Window& window):
 	),
 	Depth(
 		Texture2D::Create(window.Size(), DepthFormat, TextureUsageBits::DepthStencilOptimal, TextureLayout::DepthStencilAttachmentOptimal)
+	),
+	GeometryRenderPass(
+		RenderPass::Create(RenderPassProperties{
+			ConstSpan<AttachmentDescription>( {
+				AttachmentDescription{
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					Albedo->Format(),
+					SamplePoints::Samples_1
+				},
+				AttachmentDescription{
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					Normal->Format(),
+					SamplePoints::Samples_1
+				},
+				AttachmentDescription{
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					Position->Format(),
+					SamplePoints::Samples_1
+				},
+				AttachmentDescription{
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					Material->Format(),
+					SamplePoints::Samples_1
+				},
+				AttachmentDescription{
+					TextureLayout::DepthStencilAttachmentOptimal,
+					TextureLayout::DepthStencilAttachmentOptimal,
+					TextureLayout::DepthStencilAttachmentOptimal,
+					Depth->Format(),
+					SamplePoints::Samples_1
+				}
+			})
+		})
+	),
+	GeometryFrameBuffer(
+		Framebuffer::Create({
+			window.Size(),
+			{
+				Albedo.Get(),
+				Normal.Get(),
+				Position.Get(),
+				Material.Get(),
+				Depth.Get()
+			},
+			GeometryRenderPass.Get()
+		})
 	)
 {}
 

@@ -17,7 +17,9 @@ void Renderer::Render(Span<Mesh> meshes){
 
 	m_CmdBuffer->Begin();
 	m_GeometryPass.CmdRender(m_CmdBuffer.Get(), meshes);
+	m_CompositePass.CmdRender(m_CmdBuffer.Get(), meshes);
 	m_CmdBuffer->End();
+
 
 	GPU::Execute(m_CmdBuffer.Get(), acq, pst, fence);
 	fence.WaitAndReset();

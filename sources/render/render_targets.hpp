@@ -15,6 +15,9 @@ struct RenderTargets: FramebufferChain{
 	UniquePtr<Texture2D> Position;
 	UniquePtr<Texture2D> Material;
 	UniquePtr<Texture2D> Depth;
+
+	UniquePtr<RenderPass>  GeometryRenderPass;
+	UniquePtr<Framebuffer> GeometryFrameBuffer;
 	
 	RenderTargets(const Window &window);
 

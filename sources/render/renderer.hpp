@@ -9,6 +9,7 @@
 #include "render/mesh.hpp"
 #include "render/render_targets.hpp"
 #include "render/passes/geometry_pass.hpp"
+#include "render/passes/composite_pass.hpp"
 
 class Renderer {
 private:
@@ -16,6 +17,7 @@ private:
 	RenderTargets m_RenderTargets;
 
 	GeometryPass m_GeometryPass{m_RenderTargets};
+	CompositePass m_CompositePass{ m_RenderTargets };
 
 	UniquePtr<CommandPool> m_Pool{ CommandPool::Create() };
 	UniquePtr<CommandBuffer, CommandBufferDeleter> m_CmdBuffer{ m_Pool->Alloc(), {m_Pool.Get()} };
