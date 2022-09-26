@@ -27,7 +27,7 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, Span<MeshComponent> mesh
 	cmd_buffer->SetScissor(0, 0, m_RenderTargets.Size().x, m_RenderTargets.Size().y);
 	cmd_buffer->Bind(m_Pipeline.Get());
 	cmd_buffer->BeginRenderPass(m_RenderTargets.GeometryRenderPass.Get(), m_RenderTargets.GeometryFrameBuffer.Get());
-	for (const MeshComponent& mesh : meshes)
+	for (const Mesh& mesh : meshes)
 		mesh.CmdDraw(*cmd_buffer);
 	cmd_buffer->EndRenderPass();
 }
