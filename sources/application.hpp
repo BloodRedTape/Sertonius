@@ -2,6 +2,7 @@
 
 #include <core/os/window.hpp>
 #include "render/renderer.hpp"
+#include "framework/world.hpp"
 
 class Application {
 private:
@@ -9,6 +10,7 @@ private:
 	Renderer m_Renderer{m_Window};
 
 	bool m_IsFocused = true;
+	World m_World;
 public:
 
 	Application();
