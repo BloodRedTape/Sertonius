@@ -6,6 +6,14 @@ Application::Application(){
 
 void Application::Run(){
 
+	WeakActorPtr<Actor> ptr = m_World.Spawn(Actor());
+	if (!ptr.IsAlive()) {
+		int n = 0;
+	}
+	Actor* actor = ptr.Pin();
+
+	WeakCompPtr<ActorComponent> cptr = actor->AddComponent(ActorComponent());
+
 	Mesh mesh({
 			Vertex{{ 0.5f, 0.5f, 0.f}},
 			Vertex{{-0.5f, 0.5f, 0.f}},

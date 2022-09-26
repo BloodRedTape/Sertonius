@@ -1,13 +1,23 @@
 #include "world.hpp"
 
 void World::Kill(Actor* actor){
-	m_PendingKill.Add(actor);
+	m_PendingActorsKill.Add(actor);
 }
 
 bool World::Kill(WeakActorPtr<Actor> ptr){
 	if (ptr.IsAlive())
 		return (Kill(ptr.Pin()), true);
 	return false;
+}
+
+bool World::RemoveComponent(WeakCompPtr<ActorComponent> component){
+	if(component.IsAlive())
+		return (m_PendingComponentsRemove.Add(component.Pin()), true);
+	return false;
+}
+
+void World::RemoveComponent(ActorComponent* component){
+	m_PendingComponentsRemove.Add(component);
 }
 
 void World::Tick(float dt) {
@@ -19,12 +29,13 @@ void World::Tick(float dt) {
 }
 
 void World::PostTick(){
-	for (Actor* actor : m_PendingKill)
+	for (Actor* actor : m_PendingActorsKill)
 		m_Actors.UnorderedRemove(actor);
-	m_PendingKill.Clear();
+	m_PendingActorsKill.Clear();
 
-	for (Actor& actor : m_PendingSpawn)
-		actor.m_OwningWorld = this;
+	for (ActorComponent* component : m_PendingComponentsRemove)
+		m_Components.UnorderedRemove(component);
 
-	m_Actors.Add(Move(m_PendingSpawn));
+	m_Actors.Add(Move(m_PendingActorsSpawn));
+	m_Components.Add(Move(m_PendingComponentsAdd));
 }

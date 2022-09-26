@@ -1,25 +1,20 @@
 #pragma once
 
-#include <unordered_map>
-#include <core/templates.hpp>
-#include <core/move.hpp>
+
+#include <core/list.hpp>
+#include "framework/object.hpp"
+#include "framework/actor_component.hpp"
 
 class World;
 
-class Actor {
-public:
-    static constexpr u32 NullID = 0;
-private:
-    static std::unordered_map<u32, Actor*> s_Actors;
+class Actor: public Object{
 private:
     World* m_OwningWorld = nullptr;
-    u32 m_ID = NullID;
+    List<WeakCompPtr<ActorComponent>> m_Components;
 private:
-    template<typename Type>
-    friend class WeakActorPtr;
     friend class World;
 public:
-    Actor();
+    Actor() = default;
 
     Actor(Actor&& other)noexcept;
 
@@ -27,10 +22,24 @@ public:
 
     Actor& operator=(Actor&& other)noexcept;
     
-    template<typename ActorType, typename = EnableIfType<IsBaseOf<Actor, ActorType>::Value, void>>
-    bool IsA()const {
-        return dynamic_cast<const ActorType*>(this);
-    }
-
     virtual void Tick(float dt);
+
+    bool IsInWorld()const;
+
+    template<typename ComponentType>
+    WeakCompPtr<ComponentType> AddComponent(ComponentType&& component) {
+        WeakCompPtr<ComponentType> ptr(&component);
+        component.m_OwningActor = this;
+        m_OwningWorld->AddComponent(Move(component));
+        return ptr;
+    }
+};
+
+template<typename ActorType>
+struct WeakActorPtr : public WeakObjectPtr<ActorType>{
+	static_assert(IsBaseOf<Actor, ActorType>::Value, "ActorType should derive from Actor");
+
+	WeakActorPtr(ActorType *actor):
+		WeakObjectPtr(actor)
+	{}
 };
