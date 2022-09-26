@@ -30,6 +30,7 @@ void Application::Run(){
 
 	while (m_Window.IsOpen()) {
 
+		m_World.Tick(0);
 
 		if(m_IsFocused)
 			m_Renderer.Render(meshes);

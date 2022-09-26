@@ -26,6 +26,7 @@ public:
 
     void Kill(Actor* actor);
 
+private:
     template<typename ComponentType>
     WeakCompPtr<ComponentType> AddComponent(ComponentType&& component) {
         WeakCompPtr<ComponentType> ptr(&component);
@@ -37,6 +38,8 @@ public:
 
     void RemoveComponent(ActorComponent* component);
 
+    friend class Actor;
+public:
     void Tick(float dt);
 private:
     void PostTick();
