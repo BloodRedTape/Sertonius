@@ -42,4 +42,9 @@ struct WeakActorPtr : public WeakObjectPtr<ActorType>{
 	WeakActorPtr(ActorType *actor):
 		WeakObjectPtr(actor)
 	{}
+
+    template<typename OtherActorType, typename = EnableIfType<IsBaseOf<ActorType, OtherActorType>::Value, void>>
+	WeakActorPtr(WeakActorPtr<OtherActorType> ptr):
+		WeakObjectPtr(ptr.Pin())
+	{}
 };

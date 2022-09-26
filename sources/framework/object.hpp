@@ -46,8 +46,8 @@ public:
         m_ObjectID(other_ptr.m_ObjectID)
     {}
 
-    WeakObjectPtr(Object* Object):
-        m_ObjectID(Object->m_ID)
+    WeakObjectPtr(Object* object):
+        m_ObjectID(object ? object->m_ID : Object::NullID)
     {}
 
     ObjectType *Pin()const{
