@@ -5,6 +5,7 @@
 #include <graphics/api/descriptor_set.hpp>
 #include "render/render_targets.hpp"
 #include "render/mesh.hpp"
+#include "components/mesh_component.hpp"
 
 class GeometryPass {
 private:
@@ -17,5 +18,5 @@ private:
 public:
 	GeometryPass(const RenderTargets& targets);
 
-	void CmdRender(CommandBuffer *cmd_buffer, Span<Mesh> meshes);
+	void CmdRender(CommandBuffer *cmd_buffer, Span<MeshComponent> meshes);
 };

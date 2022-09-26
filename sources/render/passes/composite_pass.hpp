@@ -18,5 +18,5 @@ private:
 public:
 	CompositePass(const RenderTargets& targets);
 
-	void CmdRender(CommandBuffer *cmd_buffer, Span<Mesh> meshes);
+	void CmdRender(CommandBuffer *cmd_buffer);
 };

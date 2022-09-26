@@ -22,12 +22,12 @@ GeometryPass::GeometryPass(const RenderTargets& targets):
 		delete shader;
 }
 
-void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, Span<Mesh> meshes){
+void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, Span<MeshComponent> meshes){
 	cmd_buffer->SetViewport(0, 0, m_RenderTargets.Size().x, m_RenderTargets.Size().y);
 	cmd_buffer->SetScissor(0, 0, m_RenderTargets.Size().x, m_RenderTargets.Size().y);
 	cmd_buffer->Bind(m_Pipeline.Get());
 	cmd_buffer->BeginRenderPass(m_RenderTargets.GeometryRenderPass.Get(), m_RenderTargets.GeometryFrameBuffer.Get());
-	for (const Mesh& mesh : meshes)
+	for (const MeshComponent& mesh : meshes)
 		mesh.CmdDraw(*cmd_buffer);
 	cmd_buffer->EndRenderPass();
 }

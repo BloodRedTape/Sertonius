@@ -1,24 +1,33 @@
 #include "actor.hpp"
 #include "world.hpp"
     
+void Actor::OnSpawn(){
+
+}
+
 void Actor::Tick(float dt){ 
     //no-op
 }
 
-bool Actor::IsInWorld() const{
+void Actor::OnKill(){
+
+}
+
+bool Actor::IsSpawned() const{
     return m_OwningWorld != nullptr;
 }
 
 Actor::Actor(Actor&& other)noexcept:
     Object(Move(other)),
     m_Components(Move(other.m_Components)),
-    m_OwningWorld(other.m_OwningWorld)
+    m_OwningWorld(other.m_OwningWorld),
+    m_PendingComponentsAdd(Move(other.m_PendingComponentsAdd))
 {
     other.m_OwningWorld = nullptr;
 }
 
 Actor::~Actor() {
-    if (!IsInWorld()) {
+    if (!IsSpawned()) {
         SX_ASSERT(!m_Components.Size());
         return;
     }
@@ -35,5 +44,6 @@ Actor& Actor::operator=(Actor&& other)noexcept {
     m_Components = Move(other.m_Components);
     m_OwningWorld = other.m_OwningWorld;
     other.m_OwningWorld = nullptr;
+    m_PendingComponentsAdd = Move(other.m_PendingComponentsAdd);
     return *this;
 }

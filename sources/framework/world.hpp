@@ -18,6 +18,8 @@ public:
     WeakActorPtr<ActorType> Spawn(ActorType&& actor) {
         WeakActorPtr<ActorType> ptr(&actor);
         actor.m_OwningWorld = this;
+        actor.OnSpawn();
+        m_PendingComponentsAdd.Add(Move(actor.m_PendingComponentsAdd));
         m_PendingActorsSpawn.Add(Move(actor));
         return ptr;
     }
@@ -37,10 +39,15 @@ private:
     bool RemoveComponent(WeakCompPtr<ActorComponent> component);
 
     void RemoveComponent(ActorComponent* component);
-
+    
     friend class Actor;
 public:
     void Tick(float dt);
+
+    template<typename ComponentType, typename = EnableIfType<IsBaseOf<ActorComponent, ComponentType>::Value,void>>
+    Span<ComponentType> ComponentRange() {
+        return m_Components.TypeRange<ComponentType>();
+    }
 private:
     void PostTick();
 };

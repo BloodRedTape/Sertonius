@@ -3,6 +3,7 @@
 #include <core/os/window.hpp>
 #include "render/renderer.hpp"
 #include "framework/world.hpp"
+#include "framework/game_mode.hpp"
 
 class Application {
 private:
@@ -11,9 +12,11 @@ private:
 
 	bool m_IsFocused = true;
 	World m_World;
+	GameMode* m_GameMode;
+	WeakActorPtr<Actor> m_Player{ nullptr };
 public:
 
-	Application();
+	Application(GameMode *game_mode);
 
 	void Run();
 

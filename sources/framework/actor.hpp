@@ -2,6 +2,7 @@
 
 
 #include <core/list.hpp>
+#include <core/polymorph_list.hpp>
 #include "framework/object.hpp"
 #include "framework/actor_component.hpp"
 
@@ -11,6 +12,7 @@ class Actor: public Object{
 private:
     World* m_OwningWorld = nullptr;
     List<WeakCompPtr<ActorComponent>> m_Components;
+    PolymorphList<ActorComponent> m_PendingComponentsAdd;
 private:
     friend class World;
 public:
@@ -21,16 +23,24 @@ public:
     virtual ~Actor();
 
     Actor& operator=(Actor&& other)noexcept;
+
+    virtual void OnSpawn();
     
     virtual void Tick(float dt);
 
-    bool IsInWorld()const;
+    virtual void OnKill();
+
+    bool IsSpawned()const;
 
     template<typename ComponentType>
     WeakCompPtr<ComponentType> AddComponent(ComponentType&& component) {
         WeakCompPtr<ComponentType> ptr(&component);
         component.m_OwningActor = this;
-        m_OwningWorld->AddComponent(Move(component));
+        if (IsSpawned()) {
+            m_OwningWorld->AddComponent(Move(component));
+        } else {
+            m_PendingComponentsAdd.Add(Move(component));
+        }
         return ptr;
     }
 };

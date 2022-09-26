@@ -33,7 +33,7 @@ CompositePass::CompositePass(const RenderTargets& targets) :
 	delete shader;
 }
 
-void CompositePass::CmdRender(CommandBuffer* cmd_buffer, Span<Mesh> meshes){
+void CompositePass::CmdRender(CommandBuffer* cmd_buffer){
 	const Texture2D* PresentTexture = m_RenderTargets.CurrentFramebuffer()->Attachments()[0];
 
 	m_Set->UpdateTextureBinding(0, 0, m_RenderTargets.Albedo.Get(), m_Sampler.Get());

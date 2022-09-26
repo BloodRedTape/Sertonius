@@ -1,6 +1,7 @@
 #include "world.hpp"
 
 void World::Kill(Actor* actor){
+	actor->OnKill();
 	m_PendingActorsKill.Add(actor);
 }
 

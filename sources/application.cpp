@@ -1,39 +1,23 @@
 #include "application.hpp"
+#include "components/mesh_component.hpp"
 
-Application::Application(){
+Application::Application(GameMode *game_mode):
+	m_GameMode(game_mode)
+{
 	m_Window.SetEventsHandler({ this, &Application::OnEvent });
 }
 
 void Application::Run(){
+	m_Player = m_GameMode->InitWorld(m_World);
 
-	WeakActorPtr<Actor> ptr = m_World.Spawn(Actor());
-	if (!ptr.IsAlive()) {
-		int n = 0;
-	}
-	Actor* actor = ptr.Pin();
 
-	WeakCompPtr<ActorComponent> cptr = actor->AddComponent(ActorComponent());
-
-	Mesh mesh({
-			Vertex{{ 0.5f, 0.5f, 0.f}},
-			Vertex{{-0.5f, 0.5f, 0.f}},
-			Vertex{{-0.5f,-0.5f, 0.f}},
-		}, 
-		{0, 1, 2}, 
-		AABB3f({}, {}), 
-		"Mesh"
-	);
-
-	List<Mesh> meshes;
-	meshes.Add(Move(mesh));
-	meshes.Add(Mesh::LoadFromFile("content/meshes/monkey.fbx"));
 
 	while (m_Window.IsOpen()) {
 
 		m_World.Tick(0);
 
 		if(m_IsFocused)
-			m_Renderer.Render(meshes);
+			m_Renderer.Render(m_World.ComponentRange<MeshComponent>());
 		m_Window.DispatchEvents();
 	}
 }
