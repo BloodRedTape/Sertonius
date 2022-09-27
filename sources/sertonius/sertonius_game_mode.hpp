@@ -4,5 +4,5 @@
 
 class SertoniusGameMode: public GameMode{
 public:
-	WeakActorPtr<Actor> InitWorld(World& world);
+	void InitWorld(World& world)override;
 };

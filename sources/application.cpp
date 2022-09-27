@@ -8,7 +8,7 @@ Application::Application(GameMode *game_mode):
 }
 
 void Application::Run(){
-	m_Player = m_GameMode->InitWorld(m_World);
+	m_GameMode->InitWorld(m_World);
 
 
 
@@ -17,7 +17,7 @@ void Application::Run(){
 		m_World.Tick(0);
 
 		if(m_IsFocused)
-			m_Renderer.Render(m_World.ComponentRange<MeshComponent>());
+			m_Renderer.Render(m_World.BuildScene());
 		m_Window.DispatchEvents();
 	}
 }

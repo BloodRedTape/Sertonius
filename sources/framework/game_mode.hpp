@@ -4,5 +4,5 @@
 
 class GameMode{
 public:
-	virtual WeakActorPtr<Actor> InitWorld(World& world) = 0;
+	virtual void InitWorld(World& world) = 0;
 };

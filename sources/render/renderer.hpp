@@ -10,7 +10,7 @@
 #include "render/render_targets.hpp"
 #include "render/passes/geometry_pass.hpp"
 #include "render/passes/composite_pass.hpp"
-#include "components/mesh_component.hpp"
+#include "render/scene.hpp"
 
 class Renderer {
 private:
@@ -25,6 +25,6 @@ private:
 public:
 	Renderer(const Window& window);
 
-	void Render(Span<MeshComponent> meshes);
+	void Render(const Scene &scene);
 
 };

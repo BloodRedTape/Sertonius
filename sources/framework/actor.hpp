@@ -2,6 +2,7 @@
 
 
 #include <core/list.hpp>
+#include <core/math/vector3.hpp>
 #include <core/polymorph_list.hpp>
 #include "framework/object.hpp"
 #include "framework/actor_component.hpp"
@@ -13,6 +14,9 @@ private:
     World* m_OwningWorld = nullptr;
     List<WeakCompPtr<ActorComponent>> m_Components;
     PolymorphList<ActorComponent> m_PendingComponentsAdd;
+public:
+    Vector3f Position;
+    Vector3f Rotation;
 private:
     friend class World;
 public:
@@ -31,6 +35,8 @@ public:
     virtual void OnKill();
 
     bool IsSpawned()const;
+
+    World* OwningWorld() { return m_OwningWorld;  }
 
     template<typename ComponentType>
     WeakCompPtr<ComponentType> AddComponent(ComponentType&& component) {
@@ -58,3 +64,5 @@ struct WeakActorPtr : public WeakObjectPtr<ActorType>{
 		WeakObjectPtr(ptr.Pin())
 	{}
 };
+
+#include "world.hpp"

@@ -3,6 +3,7 @@
 #include <core/polymorph_list.hpp>
 #include <core/list.hpp>
 #include "framework/actor.hpp"
+#include "render/scene.hpp"
 
 class World {
 private:
@@ -43,11 +44,8 @@ private:
     friend class Actor;
 public:
     void Tick(float dt);
-
-    template<typename ComponentType, typename = EnableIfType<IsBaseOf<ActorComponent, ComponentType>::Value,void>>
-    Span<ComponentType> ComponentRange() {
-        return m_Components.TypeRange<ComponentType>();
-    }
 private:
     void PostTick();
+public:
+    Scene BuildScene();
 };

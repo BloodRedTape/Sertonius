@@ -40,3 +40,10 @@ void World::PostTick(){
 	m_Actors.Add(Move(m_PendingActorsSpawn));
 	m_Components.Add(Move(m_PendingComponentsAdd));
 }
+
+Scene World::BuildScene(){
+	return {
+		m_Components.TypeRange<MeshComponent>(),
+		nullptr
+	};
+}

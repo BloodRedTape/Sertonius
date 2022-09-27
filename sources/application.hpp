@@ -13,7 +13,6 @@ private:
 	bool m_IsFocused = true;
 	World m_World;
 	GameMode* m_GameMode;
-	WeakActorPtr<Actor> m_Player{ nullptr };
 public:
 
 	Application(GameMode *game_mode);
