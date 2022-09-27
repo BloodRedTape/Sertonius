@@ -3,7 +3,7 @@
 RenderTargets::RenderTargets(const Window& window):
 	FramebufferChain(&window, TextureFormat::Unknown),
 	Albedo(
-		Texture2D::Create(window.Size(), AlbedoFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
+		Texture2D::Create(window.Size(), AlbedoFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::ColorAttachmentOptimal)
 	),
 	Normal(
 		Texture2D::Create(window.Size(), NormalFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)

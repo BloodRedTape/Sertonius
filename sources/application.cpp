@@ -1,4 +1,5 @@
 #include "application.hpp"
+#include <core/os/clock.hpp>
 #include "components/mesh_component.hpp"
 
 Application::Application(GameMode *game_mode):
@@ -11,10 +12,11 @@ void Application::Run(){
 	m_GameMode->InitWorld(m_World);
 
 
-
+	Clock cl;
 	while (m_Window.IsOpen()) {
+		float dt = cl.Restart().AsSeconds();
 
-		m_World.Tick(0);
+		m_World.Tick(dt);
 
 		if(m_IsFocused)
 			m_Renderer.Render(m_World.BuildScene());

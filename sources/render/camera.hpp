@@ -8,4 +8,6 @@ struct Camera {
 	float Far  = 1.f;
 
 	Matrix4f MakeProjectionMatrix()const;
+
+	Matrix4f MakeViewMatrix(const Vector3f &position, const Vector3f &rotation)const;
 };

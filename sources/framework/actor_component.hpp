@@ -13,6 +13,8 @@ public:
 	virtual void Tick(float dt);
 
 	Actor* Owner();
+
+	const Actor* Owner()const;
 };
 
 template<typename ComponentType>

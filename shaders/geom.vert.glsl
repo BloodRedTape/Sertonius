@@ -9,8 +9,13 @@ layout(location = 1)out vec4 v_Normal;
 layout(location = 2)out vec4 v_WorldPosition;
 layout(location = 3)out vec4 v_Material;
 
+layout(binding = 0, row_major)uniform Camera{
+	mat4 u_View;
+	mat4 u_Projection;
+};
+
 void main(){
-	gl_Position = vec4(a_ModelPosition, 1.0);
+	gl_Position = u_Projection * u_View * vec4(a_ModelPosition, 1.0);
 	v_Albedo = vec4(a_Color, 1);
 	v_Normal = vec4(a_Normal, 1);
 	v_WorldPosition = vec4(a_ModelPosition, 1);
