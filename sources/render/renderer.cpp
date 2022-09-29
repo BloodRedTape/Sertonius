@@ -13,32 +13,35 @@ Renderer::~Renderer() {
 	Destruct();
 }
 
-Semaphore acq, gui, pst;
+Semaphore acq, pst;
 Fence fence;
 
-//int s = (fence.Signal(), 1);
-
 void Renderer::Render(const Scene &scene){
-	m_RenderTargets.AcquireNext(&acq);
+	OnImGui();
 
+	m_RenderTargets.AcquireNext(&acq);
 	m_CmdBuffer->Begin();
-	m_GeometryPass.CmdRender(m_CmdBuffer.Get(), scene);
-	m_CompositePass.CmdRender(m_CmdBuffer.Get());
+	{
+		m_GeometryPass.CmdRender(m_CmdBuffer.Get(), scene);
+		m_CompositePass.CmdRender(m_CmdBuffer.Get());
+
+		//m_CmdBuffer->ChangeLayout(m_RenderTargets.Normal.Get(), TextureLayout::ShaderReadOnlyOptimal);
+		Pointer()->CmdRenderFrame(m_CmdBuffer.Get(), m_RenderTargets.CurrentFramebuffer());
+		//m_RenderTargets.Depth->ChangeLayout(TextureLayout::DepthStencilAttachmentOptimal);
+	}
 	m_CmdBuffer->End();
 
-
-	GPU::Execute(m_CmdBuffer.Get(), acq, gui, fence);
+	GPU::Execute(m_CmdBuffer.Get(), acq, pst, fence);
 	fence.WaitAndReset();
-	OnImGui();
-	m_RenderTargets.Depth->ChangeLayout(TextureLayout::ShaderReadOnlyOptimal);
-	Pointer()->RenderFrame(m_RenderTargets.CurrentFramebuffer(), &gui, &pst);
-	m_RenderTargets.Depth->ChangeLayout(TextureLayout::DepthStencilAttachmentOptimal);
 	m_RenderTargets.PresentCurrent(&pst);
 }
 
 void Renderer::OnImGui(){
 	const ImVec2 rt_size = { 160, 90};
 	ImGui::Begin("Renderer");
+
+	ImGui::Button("Button");
+	ImGui::Text("Test");
 	
 	ImGui::Image(m_RenderTargets.Albedo.Get(), rt_size);
 	ImGui::Image(m_RenderTargets.Normal.Get(), rt_size);
