@@ -3,7 +3,7 @@
 #include <graphics/api/framebuffer.hpp>
 #include <graphics/api/swapchain.hpp>
 
-struct RenderTargets: FramebufferChain{
+struct RenderTargets{
 	static constexpr TextureFormat AlbedoFormat = TextureFormat::RGBA8;
 	static constexpr TextureFormat NormalFormat = TextureFormat::RGBA16F;
 	static constexpr TextureFormat PositionFormat = TextureFormat::RGBA16F;
@@ -19,12 +19,12 @@ struct RenderTargets: FramebufferChain{
 	UniquePtr<RenderPass>  GeometryRenderPass;
 	UniquePtr<Framebuffer> GeometryFrameBuffer;
 	
-	RenderTargets(const Window &window);
+	RenderTargets(Vector2s size);
 
-	void Recreate()override;
+	void OnRecreate(FramebufferChain *);
 
-	Vector2u Size()const {
-		return PresentTarget()->Size();
+	Vector2s Size()const {
+		return GeometryFrameBuffer->Size();
 	}
 };
 

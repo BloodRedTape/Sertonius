@@ -33,8 +33,8 @@ CompositePass::CompositePass(const RenderTargets& targets) :
 	delete shader;
 }
 
-void CompositePass::CmdRender(CommandBuffer* cmd_buffer){
-	const Texture2D* PresentTexture = m_RenderTargets.CurrentFramebuffer()->Attachments()[0];
+void CompositePass::CmdRender(CommandBuffer* cmd_buffer, const Framebuffer *fb){
+	const Texture2D* PresentTexture = fb->Attachments()[0];
 
 	m_Set->UpdateTextureBinding(0, 0, m_RenderTargets.Albedo.Get(), m_Sampler.Get());
 	m_Set->UpdateTextureBinding(1, 0, m_RenderTargets.Normal.Get(), m_Sampler.Get());
@@ -49,7 +49,7 @@ void CompositePass::CmdRender(CommandBuffer* cmd_buffer){
 	cmd_buffer->ChangeLayout(m_RenderTargets.Position.Get(), TextureLayout::ShaderReadOnlyOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Material.Get(), TextureLayout::ShaderReadOnlyOptimal);
 	cmd_buffer->ChangeLayout(PresentTexture, TextureLayout::General);
-	cmd_buffer->Dispatch(m_RenderTargets.CurrentFramebuffer()->Size().x, m_RenderTargets.CurrentFramebuffer()->Size().y, 1);
+	cmd_buffer->Dispatch(fb->Size().x, fb->Size().y, 1);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Albedo.Get(), TextureLayout::ColorAttachmentOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Normal.Get(), TextureLayout::ColorAttachmentOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Position.Get(), TextureLayout::ColorAttachmentOptimal);

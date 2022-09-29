@@ -13,22 +13,17 @@
 #include "render/scene.hpp"
 #include "imgui/backend.hpp"
 
-class Renderer: public RawVar<ImGuiBackend>{
+class Renderer{
 private:
-	const Window& m_Window;
+	const RenderPass* m_Pass;
 	RenderTargets m_RenderTargets;
 
 	GeometryPass m_GeometryPass{m_RenderTargets};
 	CompositePass m_CompositePass{ m_RenderTargets };
-
-	UniquePtr<CommandPool> m_Pool{ CommandPool::Create() };
-	UniquePtr<CommandBuffer, CommandBufferDeleter> m_CmdBuffer{ m_Pool->Alloc(), {m_Pool.Get()} };
 public:
-	Renderer(const Window& window);
+	Renderer(const FramebufferChain &chain);
 
-	~Renderer();
-
-	void Render(const Scene &scene);
+	void CmdRender(CommandBuffer *cmd_buffer, const Framebuffer *fb, const Scene &scene);
 	
 	void OnImGui();
 };

@@ -18,5 +18,5 @@ private:
 public:
 	CompositePass(const RenderTargets& targets);
 
-	void CmdRender(CommandBuffer *cmd_buffer);
+	void CmdRender(CommandBuffer *cmd_buffer, const Framebuffer *fb);
 };

@@ -1,21 +1,20 @@
 #include "render/render_targets.hpp"
 
-RenderTargets::RenderTargets(const Window& window):
-	FramebufferChain(&window, TextureFormat::Unknown),
+RenderTargets::RenderTargets(Vector2s size):
 	Albedo(
-		Texture2D::Create(window.Size(), AlbedoFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::ColorAttachmentOptimal)
+		Texture2D::Create(size, AlbedoFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::ColorAttachmentOptimal)
 	),
 	Normal(
-		Texture2D::Create(window.Size(), NormalFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
+		Texture2D::Create(size, NormalFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
 	),
 	Position(
-		Texture2D::Create(window.Size(), PositionFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
+		Texture2D::Create(size, PositionFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
 	),
 	Material(
-		Texture2D::Create(window.Size(), MaterialFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
+		Texture2D::Create(size, MaterialFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
 	),
 	Depth(
-		Texture2D::Create(window.Size(), DepthFormat, TextureUsageBits::DepthStencilOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::DepthStencilAttachmentOptimal)
+		Texture2D::Create(size, DepthFormat, TextureUsageBits::DepthStencilOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::DepthStencilAttachmentOptimal)
 	),
 	GeometryRenderPass(
 		RenderPass::Create(RenderPassProperties{
@@ -60,7 +59,7 @@ RenderTargets::RenderTargets(const Window& window):
 	),
 	GeometryFrameBuffer(
 		Framebuffer::Create({
-			window.Size(),
+			size,
 			{
 				Albedo.Get(),
 				Normal.Get(),
@@ -73,8 +72,7 @@ RenderTargets::RenderTargets(const Window& window):
 	)
 {}
 
-void RenderTargets::Recreate(){
-	const Window* window = PresentTarget();
+void RenderTargets::OnRecreate(FramebufferChain *chain){
 	this->~RenderTargets();
-	new (this) RenderTargets(*window);
+	new (this) RenderTargets(chain->PresentTarget()->Size());
 }
