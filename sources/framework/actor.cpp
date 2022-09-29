@@ -21,7 +21,9 @@ Actor::Actor(Actor&& other)noexcept:
     Object(Move(other)),
     m_Components(Move(other.m_Components)),
     m_OwningWorld(other.m_OwningWorld),
-    m_PendingComponentsAdd(Move(other.m_PendingComponentsAdd))
+    m_PendingComponentsAdd(Move(other.m_PendingComponentsAdd)),
+    Position(other.Position),
+    Rotation(other.Rotation)
 {
     other.m_OwningWorld = nullptr;
 }
@@ -45,5 +47,9 @@ Actor& Actor::operator=(Actor&& other)noexcept {
     m_OwningWorld = other.m_OwningWorld;
     other.m_OwningWorld = nullptr;
     m_PendingComponentsAdd = Move(other.m_PendingComponentsAdd);
+    Position = other.Position;
+    Rotation = other.Rotation;
+    other.Position = {};
+    other.Rotation = {};
     return *this;
 }

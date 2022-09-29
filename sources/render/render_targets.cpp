@@ -15,7 +15,7 @@ RenderTargets::RenderTargets(const Window& window):
 		Texture2D::Create(window.Size(), MaterialFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
 	),
 	Depth(
-		Texture2D::Create(window.Size(), DepthFormat, TextureUsageBits::DepthStencilOptimal, TextureLayout::DepthStencilAttachmentOptimal)
+		Texture2D::Create(window.Size(), DepthFormat, TextureUsageBits::DepthStencilOptimal | TextureUsageBits::TransferDst, TextureLayout::DepthStencilAttachmentOptimal)
 	),
 	GeometryRenderPass(
 		RenderPass::Create(RenderPassProperties{

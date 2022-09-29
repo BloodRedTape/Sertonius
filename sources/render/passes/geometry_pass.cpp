@@ -19,6 +19,7 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 	props.VertexAttributes = Vertex::AttributesList;
 	props.Shaders = shaders;
 	props.Layout = m_Layout.Get();
+	props.DepthFunction = DepthFunction::Less;
 	props.Pass = targets.GeometryRenderPass.Get();
 
 	m_Pipeline = GraphicsPipeline::Create(props);
@@ -31,6 +32,7 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 
 void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 	cmd_buffer->ClearColor(m_RenderTargets.Albedo.Get(), Color::Black);
+	cmd_buffer->ClearDepthStencil(m_RenderTargets.Depth.Get(), 1.f);
 
 	m_CameraUniform.CmdUpdate(*cmd_buffer, {
 		scene.CameraComponent->MakeViewMatrix(),
