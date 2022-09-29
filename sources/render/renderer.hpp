@@ -11,8 +11,9 @@
 #include "render/passes/geometry_pass.hpp"
 #include "render/passes/composite_pass.hpp"
 #include "render/scene.hpp"
+#include "imgui/backend.hpp"
 
-class Renderer {
+class Renderer: public RawVar<ImGuiBackend>{
 private:
 	const Window& m_Window;
 	RenderTargets m_RenderTargets;
@@ -25,6 +26,9 @@ private:
 public:
 	Renderer(const Window& window);
 
-	void Render(const Scene &scene);
+	~Renderer();
 
+	void Render(const Scene &scene);
+	
+	void OnImGui();
 };

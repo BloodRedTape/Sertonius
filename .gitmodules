@@ -4,3 +4,6 @@
 [submodule "libs/Assimp-FBXLoader"]
 	path = libs/Assimp-FBXLoader
 	url = https://github.com/BloodRedTape/Assimp-FBXLoader
+[submodule "libs/StraitX-ImGui"]
+	path = libs/StraitX-ImGui
+	url = https://github.com/straitX/imgui

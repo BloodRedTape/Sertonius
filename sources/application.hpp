@@ -20,4 +20,6 @@ public:
 	void Run();
 
 	void OnEvent(const Event& e);
+	
+	void OnImGui();
 };
