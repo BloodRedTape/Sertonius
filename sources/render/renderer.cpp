@@ -2,10 +2,11 @@
 #include <graphics/api/gpu.hpp>
 #include <core/unique_ptr.hpp>
 
-Renderer::Renderer(const FramebufferChain &chain):
+Renderer::Renderer(const FramebufferChain& chain) :
 	m_Pass(chain.Pass()),
 	m_RenderTargets(chain.PresentTarget()->Size())
-{}
+{
+}
 
 void Renderer::CmdRender(CommandBuffer* cmd_buffer, const Framebuffer* fb, const Scene& scene) {
 	OnImGui();
@@ -27,4 +28,8 @@ void Renderer::OnImGui(){
 	ImGui::Image(m_RenderTargets.Depth.Get(), rt_size);
 
 	ImGui::End();
+}
+
+void Renderer::OnSwapchainRecreate(FramebufferChain* chain){
+	m_RenderTargets.OnRecreate(chain);
 }

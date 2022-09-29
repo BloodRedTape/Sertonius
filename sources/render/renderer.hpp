@@ -26,4 +26,6 @@ public:
 	void CmdRender(CommandBuffer *cmd_buffer, const Framebuffer *fb, const Scene &scene);
 	
 	void OnImGui();
+
+	void OnSwapchainRecreate(FramebufferChain* chain);
 };

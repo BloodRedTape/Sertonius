@@ -8,6 +8,7 @@ Application::Application(GameMode *game_mode):
 	m_GameMode(game_mode)
 {
 	m_Window.SetEventsHandler({ this, &Application::OnEvent });
+	m_Swapchain.OnRecreate.Add({ &m_Renderer, &Renderer::OnSwapchainRecreate });
 }
 
 void Application::Run(){
