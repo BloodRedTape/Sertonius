@@ -16,7 +16,8 @@ void Renderer::CmdRender(CommandBuffer* cmd_buffer, const Framebuffer* fb, const
 }
 
 void Renderer::OnImGui(){
-	const ImVec2 rt_size = { 160, 90};
+	const float rt_scale = 25;
+	const ImVec2 rt_size = ImVec2{ 16 * rt_scale, 9 * rt_scale};
 	ImGui::Begin("Renderer");
 
 	ImGui::Button("Button");

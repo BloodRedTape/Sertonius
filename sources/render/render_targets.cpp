@@ -5,13 +5,13 @@ RenderTargets::RenderTargets(Vector2s size):
 		Texture2D::Create(size, AlbedoFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::ColorAttachmentOptimal)
 	),
 	Normal(
-		Texture2D::Create(size, NormalFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
+		Texture2D::Create(size, NormalFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::ColorAttachmentOptimal)
 	),
 	Position(
-		Texture2D::Create(size, PositionFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
+		Texture2D::Create(size, PositionFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::ColorAttachmentOptimal)
 	),
 	Material(
-		Texture2D::Create(size, MaterialFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled, TextureLayout::ColorAttachmentOptimal)
+		Texture2D::Create(size, MaterialFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::ColorAttachmentOptimal)
 	),
 	Depth(
 		Texture2D::Create(size, DepthFormat, TextureUsageBits::DepthStencilOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::DepthStencilAttachmentOptimal)

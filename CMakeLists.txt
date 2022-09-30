@@ -18,7 +18,7 @@ set(SAMPLE_INCLUDE
     "./sources"
 )
 
-add_executable(Sample ${SAMPLE_SOURCES})
+add_executable(Sample ${SAMPLE_SOURCES} "sources/core/log.cpp")
 target_link_libraries(Sample StraitXBase StraitXImGui assimp-fbxloader)
 target_include_directories(Sample
     PUBLIC ${SAMPLE_INCLUDE}

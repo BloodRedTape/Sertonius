@@ -32,6 +32,8 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 
 void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 	cmd_buffer->ClearColor(m_RenderTargets.Albedo.Get(), Color::Black);
+	cmd_buffer->ClearColor(m_RenderTargets.Normal.Get(), Color::Black);
+	cmd_buffer->ClearColor(m_RenderTargets.Position.Get(), Color::Black);
 	cmd_buffer->ClearDepthStencil(m_RenderTargets.Depth.Get(), 1.f);
 
 	m_CameraUniform.CmdUpdate(*cmd_buffer, {

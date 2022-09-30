@@ -12,10 +12,13 @@ Application::Application(GameMode *game_mode):
 }
 
 void Application::Run(){
+	StraitXError = new StringWriterCombiner(StraitXError, &m_LogWriter);
+	StraitXOut = new StringWriterCombiner(StraitXOut, &m_LogWriter);
 	m_GameMode->InitWorld(m_World);
 
 	Semaphore acq, pst;
 	Fence fence;
+	fence.Signal();
 
 	UniquePtr<CommandPool> m_Pool(
 		CommandPool::Create()
@@ -28,10 +31,11 @@ void Application::Run(){
 		
 		if (m_IsFocused) {
 			m_ImGuiBackend.NewFrame(dt, Mouse::RelativePosition(m_Window), m_Window.Size());
-
+			OnImGui();
 			m_World.Tick(dt);
 			m_Swapchain.AcquireNext(&acq);
 
+			fence.WaitAndReset();
 			m_CmdBuffer->Begin();
 			{
 				m_Renderer.CmdRender(m_CmdBuffer.Get(), m_Swapchain.CurrentFramebuffer(), m_World.BuildScene());
@@ -42,11 +46,11 @@ void Application::Run(){
 			GPU::Execute(m_CmdBuffer.Get(), acq, pst, fence);
 			m_Swapchain.PresentCurrent(&pst);
 
-			fence.WaitAndReset();
 		}
 
 		m_Window.DispatchEvents();
 	}
+	fence.WaitAndReset();
 }
 
 void Application::OnEvent(const Event& e){
@@ -61,6 +65,8 @@ void Application::OnEvent(const Event& e){
 }
 
 void Application::OnImGui(){
-
+	ImGui::Begin("Log");
+	m_Log.DrawImGuiText();
+	ImGui::End();
 }
 
