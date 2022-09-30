@@ -1,17 +1,17 @@
 #pragma once
 
-#include "render/renderer.hpp"
+#include "render/renderer3d.hpp"
 #include "framework/world.hpp"
 #include "framework/game_mode.hpp"
 #include <graphics/api/swapchain.hpp>
 #include <imgui/backend.hpp>
 #include "core/log.hpp"
 
-class Application {
-private:
-	Window m_Window{ 1920, 1080, "Sertonius" };
+class Engine {
+protected:
+	Window m_Window;
 	FramebufferChain m_Swapchain{&m_Window};
-	Renderer m_Renderer{m_Swapchain};
+	Renderer3D m_Renderer3D{m_Swapchain};
 	ImGuiBackend m_ImGuiBackend{ m_Swapchain.Pass() };
 
 	Log m_Log;
@@ -22,11 +22,17 @@ private:
 	GameMode* m_GameMode;
 public:
 
-	Application(GameMode *game_mode);
+	Engine(Vector2s size, GameMode *game_mode);
 
 	void Run();
 
 	void OnEvent(const Event& e);
 	
-	void OnImGui();
+	virtual const Framebuffer* OutputFramebuffer() = 0;
+
+	const Framebuffer* PresentTarget();
+
+	virtual void OnImGui();
+
+	virtual void PostRender();
 };

@@ -1,7 +1,8 @@
 #include <core/print.hpp>
 #include <core/os/directory.hpp>
 #include <graphics/api/gpu.hpp>
-#include "application.hpp"
+#include "engine/game_engine.hpp"
+#include "engine/editor_engine.hpp"
 #include "sertonius/sertonius_game_mode.hpp"
 
 int main(){
@@ -14,5 +15,5 @@ int main(){
 		return (Println("compute is not supported"), EXIT_FAILURE);
 
 	SertoniusGameMode mode;
-	Application(&mode).Run();
+	GameEngine({1920, 1080}, &mode).Run();
 }

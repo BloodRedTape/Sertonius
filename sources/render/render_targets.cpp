@@ -72,7 +72,7 @@ RenderTargets::RenderTargets(Vector2s size):
 	)
 {}
 
-void RenderTargets::OnRecreate(FramebufferChain *chain){
+void RenderTargets::OnFramebufferRecreate(Vector2s size){
 	this->~RenderTargets();
-	new (this) RenderTargets(chain->PresentTarget()->Size());
+	new (this) RenderTargets(size);
 }

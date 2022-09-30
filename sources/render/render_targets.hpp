@@ -21,7 +21,7 @@ struct RenderTargets{
 	
 	RenderTargets(Vector2s size);
 
-	void OnRecreate(FramebufferChain *);
+	void OnFramebufferRecreate(Vector2s size);
 
 	Vector2s Size()const {
 		return GeometryFrameBuffer->Size();

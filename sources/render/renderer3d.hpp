@@ -13,7 +13,7 @@
 #include "render/scene.hpp"
 #include "imgui/backend.hpp"
 
-class Renderer{
+class Renderer3D{
 private:
 	const RenderPass* m_Pass;
 	RenderTargets m_RenderTargets;
@@ -21,11 +21,11 @@ private:
 	GeometryPass m_GeometryPass{m_RenderTargets};
 	CompositePass m_CompositePass{ m_RenderTargets };
 public:
-	Renderer(const FramebufferChain &chain);
+	Renderer3D(const FramebufferChain &chain);
 
 	void CmdRender(CommandBuffer *cmd_buffer, const Framebuffer *fb, const Scene &scene);
 	
 	void OnImGui();
 
-	void OnSwapchainRecreate(FramebufferChain* chain);
+	void OnFramebufferRecreate(Vector2s size);
 };
