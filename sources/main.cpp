@@ -15,5 +15,5 @@ int main(){
 		return (Println("compute is not supported"), EXIT_FAILURE);
 
 	SertoniusGameMode mode;
-	GameEngine({1920, 1080}, &mode).Run();
+	EditorEngine({1920, 1080}, &mode).Run();
 }

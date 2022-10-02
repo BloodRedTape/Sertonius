@@ -12,8 +12,7 @@ Engine::Engine(Vector2s size, GameMode *game_mode):
 }
 
 void Engine::Run(){
-	StraitXError = new StringWriterCombiner(StraitXError, &m_LogWriter);
-	StraitXOut = new StringWriterCombiner(StraitXOut, &m_LogWriter);
+
 	m_GameMode->InitWorld(m_World);
 
 	Semaphore acq, pst;

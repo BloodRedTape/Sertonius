@@ -40,3 +40,11 @@ struct StringWriterCombiner: StringWriter{
 		Second->Write(string, size);
 	}
 };
+
+struct LogInitializer {
+	StringWriterCombiner* Out;
+	StringWriterCombiner* Err;
+	LogInitializer(LogWriter &log);
+
+	~LogInitializer();
+};

@@ -9,13 +9,14 @@
 
 class Engine {
 protected:
+	Log m_Log;
+	LogWriter m_LogWriter{ m_Log };
+	LogInitializer m_LogInitializer{ m_LogWriter };
+
 	Window m_Window;
 	FramebufferChain m_Swapchain{&m_Window};
 	Renderer3D m_Renderer3D{m_Swapchain};
 	ImGuiBackend m_ImGuiBackend{ m_Swapchain.Pass() };
-
-	Log m_Log;
-	LogWriter m_LogWriter{ m_Log };
 
 	bool m_IsFocused = true;
 	World m_World;

@@ -33,3 +33,18 @@ void LogWriter::Write(const char* string, size_t size){
 		}
 	}
 }
+
+LogInitializer::LogInitializer(LogWriter &log):
+	Err(new StringWriterCombiner(StraitXError, &log)),
+	Out(new StringWriterCombiner(StraitXOut, &log))
+{
+	StraitXError = Err;
+	StraitXOut = Out;
+}
+
+LogInitializer::~LogInitializer(){
+	StraitXOut = Out->First;
+	StraitXError = Err->First;
+	delete Err;
+	delete Out;
+}
