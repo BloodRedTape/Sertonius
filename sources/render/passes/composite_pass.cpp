@@ -1,4 +1,5 @@
 #include "render/passes/composite_pass.hpp"
+#include <cmath>
 
 CompositePass::CompositePass(const RenderTargets& targets) :
 	m_RenderTargets(targets),
@@ -49,7 +50,7 @@ void CompositePass::CmdRender(CommandBuffer* cmd_buffer, const Framebuffer *fb){
 	cmd_buffer->ChangeLayout(m_RenderTargets.Position.Get(), TextureLayout::ShaderReadOnlyOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Material.Get(), TextureLayout::ShaderReadOnlyOptimal);
 	cmd_buffer->ChangeLayout(PresentTexture, TextureLayout::General);
-	cmd_buffer->Dispatch(fb->Size().x, fb->Size().y, 1);
+	cmd_buffer->Dispatch(std::ceil(fb->Size().x/16.f), std::ceil(fb->Size().y/16.f), 1);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Albedo.Get(), TextureLayout::ColorAttachmentOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Normal.Get(), TextureLayout::ColorAttachmentOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Position.Get(), TextureLayout::ColorAttachmentOptimal);
