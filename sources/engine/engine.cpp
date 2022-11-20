@@ -1,5 +1,6 @@
 #include "engine.hpp"
 #include <core/os/clock.hpp>
+#include <core/print.hpp>
 #include <graphics/api/gpu.hpp>
 #include "components/mesh_component.hpp"
 #include "imgui/backend.hpp"
@@ -13,7 +14,7 @@ Engine::Engine(Vector2s size, GameMode *game_mode):
 
 void Engine::Run(){
 
-	m_GameMode->InitWorld(m_World);
+	m_Player = m_GameMode->InitWorld(m_World);
 
 	Semaphore acq, pst;
 	Fence fence;
@@ -29,8 +30,9 @@ void Engine::Run(){
 		
 		if (m_IsFocused) {
 			m_ImGuiBackend.NewFrame(dt, Mouse::RelativePosition(m_Window), m_Window.Size());
-			m_World.Tick(dt);
+			//Call imgui first to initialize events etc
 			OnImGui();
+			Tick(dt);
 
 			m_Swapchain.AcquireNext(&acq);
 
@@ -46,6 +48,7 @@ void Engine::Run(){
 			PostRender();
 			m_Swapchain.PresentCurrent(&pst);
 		}
+		//Println("Dt: %", dt);
 
 		m_Window.DispatchEvents();
 	}
@@ -62,12 +65,16 @@ void Engine::OnEvent(const Event& e){
 	m_ImGuiBackend.HandleEvent(e);
 }
 
+void Engine::Tick(float dt){
+	m_World.Tick(dt);
+}
+
 const Framebuffer* Engine::PresentTarget(){
 	return m_Swapchain.CurrentFramebuffer();
 }
 
 void Engine::OnImGui() {
-
+	ImGui::ShowDemoWindow(nullptr);
 }
 
 void Engine::PostRender() {

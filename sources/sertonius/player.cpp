@@ -39,14 +39,14 @@ void Player::Tick(float dt){
 	Position += direction * dt;
 #endif
 #endif
+}
 
-#if 1
-	static Vector2s mouse_position = Mouse::GlobalPosition();
-	
-	Vector2s new_position = Mouse::GlobalPosition();
-	Vector2s offset = new_position - mouse_position;
+void Player::OnMouseMove(Vector2s offset){
+	Println("Offset: %", offset);
 	Rotation.x +=  offset.y;
 	Rotation.z +=  offset.x;
-	mouse_position = new_position;
-#endif
+}
+
+void Player::OnMouseButtonPress(Mouse::Button button, Vector2s position){
+	Println("Button: %, pos: %", (int)button, position);
 }

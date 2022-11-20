@@ -21,13 +21,16 @@ protected:
 	bool m_IsFocused = true;
 	World m_World;
 	GameMode* m_GameMode;
+	WeakActorPtr<Pawn> m_Player = nullptr;
 public:
 
 	Engine(Vector2s size, GameMode *game_mode);
 
 	void Run();
 
-	void OnEvent(const Event& e);
+	virtual void OnEvent(const Event& e);
+
+	virtual void Tick(float dt);
 	
 	virtual const Framebuffer* OutputFramebuffer() = 0;
 

@@ -3,7 +3,7 @@
 #include "sertonius/mesh_actor.hpp"
 #include "render/mesh.hpp"
 
-void SertoniusGameMode::InitWorld(World& world) {
+WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 	Mesh mesh({
 			Vertex{{ 0.5f, 0.f, 0.5f}, {}, {1.f, 0.f, 0.f}},
 			Vertex{{-0.5f, 0.f, 0.5f}, {}, {0.f, 1.f, 0.f}},
@@ -19,5 +19,5 @@ void SertoniusGameMode::InitWorld(World& world) {
 		MeshActor(Move(mesh))
 	);
 
-	world.Spawn(Player());
+	return world.Spawn(Player());
 }

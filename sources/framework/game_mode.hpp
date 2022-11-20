@@ -1,8 +1,9 @@
 #pragma once
 
 #include "framework/world.hpp"
+#include "framework/pawn.hpp"
 
 class GameMode{
 public:
-	virtual void InitWorld(World& world) = 0;
+	virtual WeakActorPtr<Pawn> InitWorld(World& world) = 0;
 };

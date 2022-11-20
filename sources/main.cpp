@@ -9,6 +9,7 @@ int main(){
 #ifdef SX_OS_WINDOWS
 	Directory::Change("../../../");
 #endif
+
 	GPU::ForceInit();
 
 	if (!GPU::IsComputePipelineSupported())
