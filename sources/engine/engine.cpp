@@ -74,7 +74,7 @@ const Framebuffer* Engine::PresentTarget(){
 }
 
 void Engine::OnImGui() {
-	ImGui::ShowDemoWindow(nullptr);
+	//ImGui::ShowDemoWindow(nullptr);
 }
 
 void Engine::PostRender() {

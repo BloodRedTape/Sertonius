@@ -18,7 +18,7 @@ Matrix4f Camera::MakeProjectionMatrix()const{
 	Matrix4f projection{ 
 		{1.f/(fov * Aspect),	0.f,		0.f,				0.f},
 		{0.f,				    1.f/fov,	0.f,				0.f},
-		{0.f,			 	    0.f,		n/(f - n),			f*n/(f - n)},
+		{0.f,			 	    0.f,		-(f + n)/(f - n),	-2*f*n/(f - n)},
 		{0.f,				    0.f,		-1.f,				0.f}
 	};
 #else
@@ -29,7 +29,14 @@ Matrix4f Camera::MakeProjectionMatrix()const{
 		{0.f,   0.f,   0.f,    1.f}
 	};
 #endif
-	return projection * swap_axis;
+
+	Matrix4f invert_z{
+		{1.f, 0.f, 0.f, 0.f},
+		{0.f, 1.f, 0.f, 0.f},
+		{0.f, 0.f,-1.f, 0.f},
+		{0.f, 0.f, 0.f, 1.f}
+	};
+	return projection * invert_z * swap_axis;
 }
 
 Matrix4f Camera::MakeViewMatrix(const Vector3f& position, const Vector3f& rotation) const{

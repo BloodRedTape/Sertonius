@@ -9,7 +9,7 @@ Player::Player(){
 
 	Camera camera;
 	camera.FOV  = 90;
-	camera.Near = 0;
+	camera.Near = 0.1;
 	camera.Far  = 20;
 	camera.Aspect = 16 / 9.f;
 
@@ -43,8 +43,8 @@ void Player::Tick(float dt){
 
 void Player::OnMouseMove(Vector2s offset){
 	Println("Offset: %", offset);
-	Rotation.x +=  offset.y;
-	Rotation.z +=  offset.x;
+	Rotation.x -=  offset.y;
+	Rotation.z -=  offset.x;
 }
 
 void Player::OnMouseButtonPress(Mouse::Button button, Vector2s position){
