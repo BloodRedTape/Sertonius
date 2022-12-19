@@ -42,10 +42,14 @@ void World::PostTick(){
 }
 
 Scene World::BuildScene(){
+	Scene scene;
+	for (const MeshComponent& mesh : m_Components.TypeRange<MeshComponent>())
+		scene.Meshes.Add(&mesh);
+	
 	auto camera_range = m_Components.TypeRange<CameraComponent>();
+
 	CameraComponent* camera = camera_range.Size() ? &camera_range[0] : nullptr;
-	return {
-		m_Components.TypeRange<MeshComponent>(),
-		camera	
-	};
+	scene.Camera = camera ? RenderCamera(camera) : RenderCamera();
+
+	return scene;
 }

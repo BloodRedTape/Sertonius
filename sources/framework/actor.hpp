@@ -4,19 +4,17 @@
 #include <core/list.hpp>
 #include <core/math/vector3.hpp>
 #include <core/polymorph_list.hpp>
+#include "core/transform.hpp"
 #include "framework/object.hpp"
 #include "framework/actor_component.hpp"
 
 class World;
 
-class Actor: public Object{
+class Actor: public Object, public Transform{
 private:
     World* m_OwningWorld = nullptr;
     List<WeakCompPtr<ActorComponent>> m_Components;
     PolymorphList<ActorComponent> m_PendingComponentsAdd;
-public:
-    Vector3f Position;
-    Vector3f Rotation;
 private:
     friend class World;
 public:
@@ -49,6 +47,10 @@ public:
         }
         return ptr;
     }
+
+    Transform GlobalTransform()const;
+
+    const Transform &LocalTransform()const;
 };
 
 template<typename ActorType>

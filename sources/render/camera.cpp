@@ -39,7 +39,3 @@ Matrix4f Camera::MakeProjectionMatrix()const{
 	return projection * invert_z * swap_axis;
 }
 
-Matrix4f Camera::MakeViewMatrix(const Vector3f& position, const Vector3f& rotation) const{
-	return Math::Rotate<float>(Math::Rad(-rotation)) * Math::Translate(-position); 
-}
-

@@ -37,8 +37,8 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 	cmd_buffer->ClearDepthStencil(m_RenderTargets.Depth.Get(), 1.f);
 
 	m_CameraUniform.CmdUpdate(*cmd_buffer, {
-		scene.CameraComponent->MakeViewMatrix(),
-		scene.CameraComponent->MakeProjectionMatrix(),
+		scene.Camera.MakeViewMatrix(),
+		scene.Camera.MakeProjectionMatrix(),
 	});
 
 	cmd_buffer->SetViewport(0, 0, m_RenderTargets.Size().x, m_RenderTargets.Size().y);
@@ -46,7 +46,7 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 	cmd_buffer->Bind(m_Pipeline.Get());
 	cmd_buffer->Bind(m_Set.Get());
 	cmd_buffer->BeginRenderPass(m_RenderTargets.GeometryRenderPass.Get(), m_RenderTargets.GeometryFrameBuffer.Get());
-	for (const Mesh& mesh : scene.Meshes)
-		mesh.CmdDraw(*cmd_buffer);
+	for (const RenderMesh& render_mesh : scene.Meshes)
+		render_mesh.Mesh->CmdDraw(*cmd_buffer);
 	cmd_buffer->EndRenderPass();
 }

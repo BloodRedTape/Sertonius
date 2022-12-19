@@ -13,6 +13,10 @@ class GeometryPass {
 		Matrix4f u_View;
 		Matrix4f u_Projection;
 	};
+
+	struct ModelUniform {
+		Matrix4f u_Model;
+	};
 private:
 	const RenderTargets& m_RenderTargets;
 	

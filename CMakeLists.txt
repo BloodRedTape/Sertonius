@@ -27,7 +27,12 @@ set(SAMPLE_SOURCES
     "sources/sertonius/sertonius_game_mode.cpp" 
     "sources/render/camera.cpp"
     "sources/components/camera_component.cpp" 
-    "sources/core/log.cpp" "sources/engine/game_engine.cpp" "sources/engine/editor_engine.cpp" "sources/framework/pawn.cpp")
+    "sources/core/log.cpp" 
+    "sources/engine/game_engine.cpp" 
+    "sources/engine/editor_engine.cpp" 
+    "sources/framework/pawn.cpp"
+    "sources/render/scene.cpp"
+)
 
 set(SAMPLE_INCLUDE
     "./sources"

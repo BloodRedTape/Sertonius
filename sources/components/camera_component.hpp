@@ -8,6 +8,4 @@ public:
 	CameraComponent(Camera camera):
 		Camera(camera)
 	{}
-
-	Matrix4f MakeViewMatrix()const;
 };

@@ -9,6 +9,4 @@ struct Camera {
 	float Aspect = 16.f / 9.f;
 
 	Matrix4f MakeProjectionMatrix()const;
-
-	Matrix4f MakeViewMatrix(const Vector3f &position, const Vector3f &rotation)const;
 };

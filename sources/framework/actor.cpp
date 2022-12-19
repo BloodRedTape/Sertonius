@@ -18,12 +18,11 @@ bool Actor::IsSpawned() const{
 }
 
 Actor::Actor(Actor&& other)noexcept:
+    Transform(other),
     Object(Move(other)),
     m_Components(Move(other.m_Components)),
     m_OwningWorld(other.m_OwningWorld),
-    m_PendingComponentsAdd(Move(other.m_PendingComponentsAdd)),
-    Position(other.Position),
-    Rotation(other.Rotation)
+    m_PendingComponentsAdd(Move(other.m_PendingComponentsAdd))
 {
     other.m_OwningWorld = nullptr;
 }
@@ -51,5 +50,12 @@ Actor& Actor::operator=(Actor&& other)noexcept {
     Rotation = other.Rotation;
     other.Position = {};
     other.Rotation = {};
+    return *this;
+}
+Transform Actor::GlobalTransform()const {
+    return LocalTransform();
+}
+
+const Transform &Actor::LocalTransform()const {
     return *this;
 }
