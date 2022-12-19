@@ -25,6 +25,9 @@ void World::Tick(float dt) {
 	m_Actors.ForEach([dt](Actor *actor) {
 		actor->Tick(dt);
 	});
+	m_Components.ForEach([dt](ActorComponent *component) {
+		component->Tick(dt);
+	});
 
 	PostTick();
 }

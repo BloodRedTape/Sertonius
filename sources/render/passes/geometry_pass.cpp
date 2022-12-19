@@ -4,9 +4,10 @@
 
 GeometryPass::GeometryPass(const RenderTargets& targets) :
 	m_RenderTargets(targets),
-	m_Layout(
+	m_SetLayout(
 		DescriptorSetLayout::Create({
-			ShaderBinding(0, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex)
+			ShaderBinding(0, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
+			ShaderBinding(1, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
 		})
 	)
 {
@@ -18,7 +19,7 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 	GraphicsPipelineProperties props;
 	props.VertexAttributes = Vertex::AttributesList;
 	props.Shaders = shaders;
-	props.Layout = m_Layout.Get();
+	props.Layout = m_SetLayout.Get();
 	props.DepthFunction = DepthFunction::Less;
 	props.Pass = targets.GeometryRenderPass.Get();
 
@@ -26,11 +27,12 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 
 	for (auto shader : shaders)
 		delete shader;
-
-	m_Set->UpdateUniformBinding(0, 0, m_CameraUniform);
 }
 
 void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
+	m_SetPool.NextFrame();
+	m_ModelUniformBufferPool.Reset();
+
 	cmd_buffer->ClearColor(m_RenderTargets.Albedo.Get(), Color::Black);
 	cmd_buffer->ClearColor(m_RenderTargets.Normal.Get(), Color::Black);
 	cmd_buffer->ClearColor(m_RenderTargets.Position.Get(), Color::Black);
@@ -44,9 +46,18 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 	cmd_buffer->SetViewport(0, 0, m_RenderTargets.Size().x, m_RenderTargets.Size().y);
 	cmd_buffer->SetScissor(0, 0, m_RenderTargets.Size().x, m_RenderTargets.Size().y);
 	cmd_buffer->Bind(m_Pipeline.Get());
-	cmd_buffer->Bind(m_Set.Get());
 	cmd_buffer->BeginRenderPass(m_RenderTargets.GeometryRenderPass.Get(), m_RenderTargets.GeometryFrameBuffer.Get());
-	for (const RenderMesh& render_mesh : scene.Meshes)
+
+	for (const RenderMesh& render_mesh : scene.Meshes) {
+		UniformBuffer<ModelUniform>* model_uniform = m_ModelUniformBufferPool.AllocOrReuse();
+		model_uniform->Update({ render_mesh.MakeTransformMatrix() });
+
+		auto set = m_SetPool.Alloc();
+		set->UpdateUniformBinding(0, 0, m_CameraUniform);
+		set->UpdateUniformBinding(1, 0, *model_uniform);
+		cmd_buffer->Bind(set);
+
 		render_mesh.Mesh->CmdDraw(*cmd_buffer);
+	}
 	cmd_buffer->EndRenderPass();
 }

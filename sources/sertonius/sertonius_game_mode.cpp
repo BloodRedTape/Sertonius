@@ -14,11 +14,12 @@ public:
 
 	void Tick(float dt)override {
 		ActorComponent::Tick(dt);
-		m_Time = dt;
+		m_Time += dt;
+
 
 		Actor* Target = Owner();
 		
-		Target->Position = { cos(m_Time), sin(m_Time) };
+		Target->Position = { cos(m_Time), sin(m_Time), 0};
 		Target->Position *= m_Radius;
 	}
 };
@@ -36,7 +37,7 @@ WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 	world.Spawn<MeshActor>(Mesh::LoadFromFile("content/meshes/axis.fbx"));
 
 	WeakActorPtr<MeshActor> monkey = world.Spawn(MeshActor(Mesh::LoadFromFile("content/meshes/monkey.fbx")));
-	monkey.Pin()->AddComponent<SpinningMovementCompennt>(2.f);
+	monkey.Pin()->AddComponent<SpinningMovementCompennt>(5.f);
 
 	world.Spawn(
 		MeshActor(Move(mesh))

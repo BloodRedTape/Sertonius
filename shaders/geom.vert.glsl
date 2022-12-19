@@ -14,8 +14,11 @@ layout(binding = 0, row_major)uniform Camera{
 	mat4 u_Projection;
 };
 
+layout(binding = 1, row_major)uniform Model{
+	mat4 u_Model;
+};
 void main(){
-	gl_Position = u_Projection * u_View * vec4(a_ModelPosition, 1.0);
+	gl_Position = u_Projection * u_View * u_Model * vec4(a_ModelPosition, 1.0);
 	v_Albedo = vec4(a_Color, 1);
 	v_Normal = vec4(a_Normal, 1);
 	v_WorldPosition = vec4(a_ModelPosition, 1);

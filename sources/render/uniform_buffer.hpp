@@ -30,6 +30,11 @@ public:
         *m_StagingDataPtr = content;
         cmd_buffer.Copy(m_StagingBuffer.Get(), m_UniformBuffer.Get(), sizeof(ContentStruct));
     }
+
+    void Update(const ContentStruct& content){
+        *m_UniformBuffer->Map<ContentStruct>() = content;
+        m_UniformBuffer->Unmap();
+    }
     
     operator const Buffer*()const{
         return m_UniformBuffer.Get();

@@ -7,6 +7,7 @@
 #include "render/mesh.hpp"
 #include "render/scene.hpp"
 #include "render/uniform_buffer.hpp"
+#include "core/reusable_object_pool.hpp"
 
 class GeometryPass {
 	struct CameraUniform {
@@ -20,10 +21,12 @@ class GeometryPass {
 private:
 	const RenderTargets& m_RenderTargets;
 	
-	UniquePtr<DescriptorSetLayout> m_Layout;
+	UniquePtr<DescriptorSetLayout> m_SetLayout;
 	UniquePtr<GraphicsPipeline> m_Pipeline{ nullptr };
-	UniquePtr<DescriptorSetPool> m_SetPool{ DescriptorSetPool::Create({1, m_Layout.Get()}) };
-	UniquePtr<DescriptorSet, DescriptorSetDeleter> m_Set{ m_SetPool->Alloc(), {m_SetPool.Get()} };
+	static constexpr size_t MaxUniformBuffers = 64;
+	static constexpr size_t PreallocatedUniforms = 4;
+	SingleFrameDescriptorSetPool m_SetPool{ {MaxUniformBuffers, m_SetLayout.Get()}, PreallocatedUniforms };
+	ReusableObjectPool<UniformBuffer<ModelUniform>> m_ModelUniformBufferPool;
 
 	UniformBuffer<CameraUniform> m_CameraUniform;
 public:
