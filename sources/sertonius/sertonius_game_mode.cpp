@@ -2,6 +2,7 @@
 #include "sertonius/player.hpp"
 #include "sertonius/mesh_actor.hpp"
 #include "render/mesh.hpp"
+#include <core/print.hpp>
 
 class SpinningMovementCompennt : public ActorComponent {
 private:
@@ -21,6 +22,19 @@ public:
 		
 		Target->Position = { cos(m_Time), sin(m_Time), 0};
 		Target->Position *= m_Radius;
+
+		Println("position: %", Target->Position);
+	}
+};
+
+class RolingMovementCompennt : public ActorComponent {
+public:
+	void Tick(float dt)override {
+		ActorComponent::Tick(dt);
+		Actor* Target = Owner();
+
+		Target->Rotation.y += dt * 90.f;
+		Println("rotation: %", Target->Rotation);
 	}
 };
 
@@ -35,9 +49,14 @@ WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 		"Mesh"
 	);
 	world.Spawn<MeshActor>(Mesh::LoadFromFile("content/meshes/axis.fbx"));
-
-	WeakActorPtr<MeshActor> monkey = world.Spawn(MeshActor(Mesh::LoadFromFile("content/meshes/monkey.fbx")));
-	monkey.Pin()->AddComponent<SpinningMovementCompennt>(5.f);
+	
+	Actor* spinner = world.Spawn(Actor()).Pin();
+	spinner->AddComponent<SpinningMovementCompennt>(5.f);
+	spinner->AddComponent<RolingMovementCompennt>({});
+	
+	MeshActor *monkey = world.Spawn(MeshActor(Mesh::LoadFromFile("content/meshes/monkey.fbx"))).Pin();
+	spinner->AttachChild(monkey);
+	monkey->Position.z = 3;
 
 	world.Spawn(
 		MeshActor(Move(mesh))

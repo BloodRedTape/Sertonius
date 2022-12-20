@@ -52,6 +52,8 @@ void Engine::Run(){
 
 		m_Window.DispatchEvents();
 	}
+
+	GPU::WaitIdle();
 }
 
 void Engine::OnEvent(const Event& e){

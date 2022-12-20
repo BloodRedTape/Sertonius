@@ -32,13 +32,14 @@ set(SAMPLE_SOURCES
     "sources/engine/editor_engine.cpp" 
     "sources/framework/pawn.cpp"
     "sources/render/scene.cpp"
+    "sources/core/transform.cpp" 
 )
 
 set(SAMPLE_INCLUDE
     "./sources"
 )
 
-add_executable(Sample ${SAMPLE_SOURCES} "sources/core/transform.cpp")
+add_executable(Sample ${SAMPLE_SOURCES})
 target_link_libraries(Sample StraitXBase StraitXImGui assimp-fbxloader)
 target_include_directories(Sample
     PUBLIC ${SAMPLE_INCLUDE}

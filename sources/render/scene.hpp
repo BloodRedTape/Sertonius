@@ -5,13 +5,15 @@
 #include "components/mesh_component.hpp"
 #include "components/camera_component.hpp"
 
-struct RenderMesh: Transform{
+struct RenderMesh{
+	Matrix4f Transform;
 	const class Mesh* Mesh;
 
 	RenderMesh(const MeshComponent* mesh);
 };
 
-struct RenderCamera : Transform, Camera{
+struct RenderCamera : Camera{
+	Matrix4f Transform;
 
 	RenderCamera() = default;
 

@@ -1,8 +1,18 @@
 #include "world.hpp"
 
+World::~World() {
+	m_Actors.ForEach([this](Actor *actor) {
+		Kill(actor);
+	});
+
+	KillPendingActorsAndComponents();
+}
+
 void World::Kill(Actor* actor){
-	actor->OnKill();
+	if (actor->IsPendingKill())
+		return;
 	m_PendingActorsKill.Add(actor);
+	actor->OnKill();
 }
 
 bool World::Kill(WeakActorPtr<Actor> ptr){
@@ -33,15 +43,22 @@ void World::Tick(float dt) {
 }
 
 void World::PostTick(){
-	for (Actor* actor : m_PendingActorsKill)
-		m_Actors.UnorderedRemove(actor);
-	m_PendingActorsKill.Clear();
+	KillPendingActorsAndComponents();
+	SpawnPendingActorsAndComponents();
+}
 
-	for (ActorComponent* component : m_PendingComponentsRemove)
-		m_Components.UnorderedRemove(component);
-
+void World::SpawnPendingActorsAndComponents(){	
 	m_Actors.Add(Move(m_PendingActorsSpawn));
 	m_Components.Add(Move(m_PendingComponentsAdd));
+}
+
+void World::KillPendingActorsAndComponents(){
+	for (WeakActorPtr<Actor> actor : m_PendingActorsKill)
+		m_Actors.UnorderedRemove(actor.Pin());
+	m_PendingActorsKill.Clear();
+
+	for (WeakCompPtr<ActorComponent> component : m_PendingComponentsRemove)
+		m_Components.UnorderedRemove(component.Pin());
 }
 
 Scene World::BuildScene(){

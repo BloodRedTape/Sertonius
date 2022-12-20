@@ -13,5 +13,5 @@ RenderCamera::RenderCamera(const CameraComponent* camera):
 {}
 
 Matrix4f RenderCamera::MakeViewMatrix() const{
-	return Math::Rotate<float>(Math::Rad(-Rotation)) * Math::Translate(-Position); 
+	return Transform.GetInverse();
 }

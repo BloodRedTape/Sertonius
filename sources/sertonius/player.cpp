@@ -42,11 +42,11 @@ void Player::Tick(float dt){
 }
 
 void Player::OnMouseMove(Vector2s offset){
-	Println("Offset: %", offset);
+	//Println("Offset: %", offset);
 	Rotation.x -=  offset.y;
 	Rotation.z -=  offset.x;
 }
 
 void Player::OnMouseButtonPress(Mouse::Button button, Vector2s position){
-	Println("Button: %, pos: %", (int)button, position);
+	//Println("Button: %, pos: %", (int)button, position);
 }

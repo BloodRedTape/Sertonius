@@ -9,12 +9,14 @@ class World {
 private:
     PolymorphList<Actor> m_Actors;
     PolymorphList<Actor> m_PendingActorsSpawn;
-    List<Actor*> m_PendingActorsKill;
+    List<WeakActorPtr<Actor>> m_PendingActorsKill;
 
     PolymorphList<ActorComponent> m_Components;
     PolymorphList<ActorComponent> m_PendingComponentsAdd;
-    List<ActorComponent*> m_PendingComponentsRemove;
+    List<WeakCompPtr<ActorComponent>> m_PendingComponentsRemove;
 public:
+    ~World();
+
     template<typename ActorType>
     WeakActorPtr<ActorType> Spawn(ActorType&& actor) {
         WeakActorPtr<ActorType> ptr(&actor);
@@ -46,6 +48,10 @@ public:
     void Tick(float dt);
 private:
     void PostTick();
+
+    void SpawnPendingActorsAndComponents();
+
+    void KillPendingActorsAndComponents();
 public:
     Scene BuildScene();
 };

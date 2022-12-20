@@ -50,7 +50,7 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 
 	for (const RenderMesh& render_mesh : scene.Meshes) {
 		UniformBuffer<ModelUniform>* model_uniform = m_ModelUniformBufferPool.AllocOrReuse();
-		model_uniform->Update({ render_mesh.MakeTransformMatrix() });
+		model_uniform->Update({ render_mesh.Transform });
 
 		auto set = m_SetPool.Alloc();
 		set->UpdateUniformBinding(0, 0, m_CameraUniform);
