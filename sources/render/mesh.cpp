@@ -18,6 +18,10 @@ Array<VertexAttribute, 3> Vertex::AttributesList = {
 };
 
 Mesh::Mesh(ConstSpan<Vertex> vertices, ConstSpan<Index> indices, const AABB3f &bounding_box, String name):
+    Mesh({ MeshSection{0, 0, u32(indices.Size())} }, vertices, indices, bounding_box, Move(name))
+{}
+
+Mesh::Mesh(List<MeshSection> sections, ConstSpan<Vertex> vertices, ConstSpan<Index> indices, const AABB3f & bounding_box, String name):
 	m_VertexBuffer(
 		Buffer::Create(
 			vertices.Pointer(), vertices.Size() * sizeof(Vertex), 
@@ -32,6 +36,7 @@ Mesh::Mesh(ConstSpan<Vertex> vertices, ConstSpan<Index> indices, const AABB3f &b
 			BufferUsageBits::IndexBuffer| BufferUsageBits::TransferDestination
 		)
 	),
+    m_Sections(Move(sections)),
     m_BoundingBox(bounding_box),
     m_Name(Move(name))
 {}
@@ -39,7 +44,8 @@ Mesh::Mesh(ConstSpan<Vertex> vertices, ConstSpan<Index> indices, const AABB3f &b
 void Mesh::CmdDraw(CommandBuffer& buffer)const{
 	buffer.BindVertexBuffer(m_VertexBuffer.Get());
 	buffer.BindIndexBuffer(m_IndexBuffer.Get(), IndicesType::Uint32);
-    buffer.DrawIndexed(IndicesCount());
+    for(const MeshSection &section: m_Sections)
+        buffer.DrawIndexed(section.IndicesCount, section.BaseIndex, section.BaseVertex);
 }
 
 static Vector3f ToVector3(aiVector3D vector){
