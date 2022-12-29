@@ -3,7 +3,7 @@
 
 Log::Log(){
 	m_History.Reserve(HistorySize);
-	m_History.Add({});
+	m_History.Add(String());
 }
 
 void Log::DrawImGuiText(){
