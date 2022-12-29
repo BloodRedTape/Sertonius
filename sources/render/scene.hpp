@@ -7,7 +7,7 @@
 
 struct RenderMesh{
 	Matrix4f Transform;
-	const class Mesh* Mesh;
+	MeshHandle Mesh;
 
 	RenderMesh(const MeshComponent* mesh);
 };

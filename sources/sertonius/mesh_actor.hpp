@@ -5,7 +5,7 @@
 class MeshActor : public Actor {
 	WeakCompPtr<MeshComponent> m_MeshComponent{ nullptr };
 public:
-	MeshActor(Mesh mesh) {
-		 m_MeshComponent = AddComponent<MeshComponent>(Move(mesh));
+	MeshActor(MeshHandle mesh) {
+		 m_MeshComponent = AddComponent<MeshComponent>(mesh);
 	}
 };

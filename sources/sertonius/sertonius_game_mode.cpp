@@ -2,6 +2,7 @@
 #include "sertonius/player.hpp"
 #include "sertonius/mesh_actor.hpp"
 #include "render/mesh.hpp"
+#include "framework/assets_manager.hpp"
 #include <core/print.hpp>
 
 class SpinningMovementCompennt : public ActorComponent {
@@ -40,26 +41,26 @@ public:
 
 WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 	Mesh mesh({
-			Vertex{{ 0.5f, 0.f, 0.5f}, {}, {1.f, 0.f, 0.f}},
-			Vertex{{-0.5f, 0.f, 0.5f}, {}, {0.f, 1.f, 0.f}},
-			Vertex{{-0.5f, 0.f,-0.5f}, {}, {0.f, 0.f, 1.f}},
+			Vertex{{ 0.5f, 0.f, 0.5f}, {}},
+			Vertex{{-0.5f, 0.f, 0.5f}, {}},
+			Vertex{{-0.5f, 0.f,-0.5f}, {}},
 		},
 		{ 0, 1, 2 },
 		AABB3f({}, {}),
 		"Mesh"
 	);
-	world.Spawn<MeshActor>(Mesh::LoadFromFile("content/meshes/axis.fbx"));
+	world.Spawn<MeshActor>(AssetsManager::Get().GetOrLoadMesh("content/meshes/axis.fbx"));
 	
 	Actor* spinner = world.Spawn(Actor()).Pin();
 	spinner->AddComponent<SpinningMovementCompennt>(5.f);
 	spinner->AddComponent<RolingMovementCompennt>({});
 	
-	MeshActor *monkey = world.Spawn(MeshActor(Mesh::LoadFromFile("content/meshes/monkey.fbx"))).Pin();
+	MeshActor *monkey = world.Spawn(MeshActor(AssetsManager::Get().GetOrLoadMesh("content/meshes/monkey.fbx"))).Pin();
 	spinner->AttachChild(monkey);
 	monkey->Position.z = 3;
 
 	world.Spawn(
-		MeshActor(Move(mesh))
+		MeshActor(AssetsManager::Get().Add(Move(mesh)))
 	);
 
 	return world.Spawn(Player());

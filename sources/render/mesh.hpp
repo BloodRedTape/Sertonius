@@ -14,9 +14,8 @@
 struct Vertex {
 	Vector3f Position;
 	Vector3f Normal;
-	Vector3f Color;
 
-	static Array<VertexAttribute, 3> AttributesList;
+	static Array<VertexAttribute, 2> AttributesList;
 };
 
 struct MeshSection {
@@ -53,5 +52,5 @@ public:
 		return m_BoundingBox;
 	}
 
-	static Mesh LoadFromFile(const char *filepath);
+	static Mesh LoadFromFile(StringView filepath);
 };

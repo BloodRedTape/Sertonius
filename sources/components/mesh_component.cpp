@@ -1,5 +1,5 @@
 #include "components/mesh_component.hpp"
 
-MeshComponent::MeshComponent(Mesh mesh):
-	Mesh(Move(mesh))
+MeshComponent::MeshComponent(MeshHandle mesh):
+	Mesh(mesh)
 {}

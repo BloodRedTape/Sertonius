@@ -11,8 +11,7 @@
 #include <core/os/file.hpp>
 #include <cassert>
 
-Array<VertexAttribute, 3> Vertex::AttributesList = {
-    VertexAttribute::Float32x3,
+Array<VertexAttribute, 2> Vertex::AttributesList = {
     VertexAttribute::Float32x3,
     VertexAttribute::Float32x3
 };
@@ -81,7 +80,6 @@ Mesh MakeMeshFromNode(const aiScene *scene, const aiNode *node, String name) {
             vertices.Add({
                 ToVector3(mesh->mVertices[j]),
                 ToVector3(mesh->mNormals[j]),
-                Vector3f{1, 1, 1}
             });
         }
         
@@ -108,16 +106,16 @@ Mesh MakeMeshFromNode(const aiScene *scene, const aiNode *node, String name) {
     return Mesh(Move(sections), vertices, indices, AABB3f({ 0, 0 }, { 0, 0 }), name);
 }
 
-Mesh Mesh::LoadFromFile(const char* filepath) {
-    std::string path = filepath;
+Mesh Mesh::LoadFromFile(StringView filepath) {
 
-    if(!File::Exists(path.c_str()))
-        path = "../../../" + path;
-
-    SX_ASSERT(File::Exists(path.c_str()));
+    SX_ASSERT(File::Exists(filepath));
 
     Assimp::Importer imp;
-    const aiScene *scene = imp.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals);
+    auto filedata = File::ReadEntire(filepath);
+    assert(filedata.HasValue());
+    String& data = filedata.Value();
+
+    const aiScene *scene = imp.ReadFileFromMemory(data.Data(), data.Size(), aiProcess_Triangulate | aiProcess_GenNormals);
 
     const aiNode* node = FindFirstMeshNode(scene->mRootNode);
 

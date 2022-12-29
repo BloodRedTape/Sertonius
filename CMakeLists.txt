@@ -33,6 +33,7 @@ set(SAMPLE_SOURCES
     "sources/framework/pawn.cpp"
     "sources/render/scene.cpp"
     "sources/core/transform.cpp" 
+    "sources/framework/assets_manager.cpp"
 )
 
 set(SAMPLE_INCLUDE

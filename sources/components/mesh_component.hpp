@@ -1,9 +1,11 @@
 #pragma once
 
 #include "framework/actor_component.hpp"
-#include "render/mesh.hpp"
+#include "framework/assets_manager.hpp"
 
-class MeshComponent : public ActorComponent, public Mesh {
+class MeshComponent : public ActorComponent{
 public:
-	MeshComponent(Mesh mesh);
+	MeshHandle Mesh;
+public:
+	MeshComponent(MeshHandle mesh);
 };

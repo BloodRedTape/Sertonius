@@ -1,4 +1,5 @@
 #include "render/passes/geometry_pass.hpp"
+#include "framework/assets_manager.hpp"
 #include <core/fixed_list.hpp>
 #include <core/os/file.hpp>
 
@@ -56,8 +57,8 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 		set->UpdateUniformBinding(0, 0, m_CameraUniform);
 		set->UpdateUniformBinding(1, 0, *model_uniform);
 		cmd_buffer->Bind(set);
-
-		render_mesh.Mesh->CmdDraw(*cmd_buffer);
+		
+		AssetsManager::Get().Get(render_mesh.Mesh)->CmdDraw(*cmd_buffer);
 	}
 	cmd_buffer->EndRenderPass();
 }

@@ -4,7 +4,7 @@
 
 RenderMesh::RenderMesh(const MeshComponent* mesh) :
 	Transform(mesh->Owner()->GlobalTransform()),
-	Mesh(mesh)
+	Mesh(mesh->Mesh)
 {}
 
 RenderCamera::RenderCamera(const CameraComponent* camera):
