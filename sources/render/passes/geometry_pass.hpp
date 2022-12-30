@@ -23,8 +23,8 @@ private:
 	
 	UniquePtr<DescriptorSetLayout> m_SetLayout;
 	UniquePtr<GraphicsPipeline> m_Pipeline{ nullptr };
-	static constexpr size_t MaxUniformBuffers = 64;
-	static constexpr size_t PreallocatedUniforms = 4;
+	static constexpr size_t MaxUniformBuffers = 1024;
+	static constexpr size_t PreallocatedUniforms = 64;
 	SingleFrameDescriptorSetPool m_SetPool{ {MaxUniformBuffers, m_SetLayout.Get()}, PreallocatedUniforms };
 	ReusableObjectPool<UniformBuffer<ModelUniform>> m_ModelUniformBufferPool;
 

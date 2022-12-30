@@ -60,6 +60,13 @@ WeakActorPtr<Actor> ActorLoader::MakeActorFromNode(const class aiNode* node) {
         MeshHandle mesh = AssetsManager::Add(MakeMeshFromNode(node, {}));
         actor_ptr.Pin()->AddComponent<MeshComponent>(mesh);
     }
+    aiVector3D scaling;
+    aiVector3D rotation;
+    aiVector3D position;
+    node->mTransformation.Decompose(scaling, rotation, position);
+    actor_ptr.Pin()->Position = ToVector3(position);
+    actor_ptr.Pin()->Rotation = Math::Deg(ToVector3(rotation));
+    actor_ptr.Pin()->Scale = ToVector3(scaling);
 
     for (int i = 0; i < node->mNumChildren; i++)
         actor_ptr.Pin()->AttachChild(MakeActorFromNode(node->mChildren[i]).Pin());

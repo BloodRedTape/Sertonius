@@ -25,7 +25,6 @@ public:
 		Target->Position = { cos(m_Time), sin(m_Time), 0};
 		Target->Position *= m_Radius;
 
-		Println("position: %", Target->Position);
 	}
 };
 
@@ -36,7 +35,6 @@ public:
 		Actor* Target = Owner();
 
 		Target->Rotation.y += dt * 90.f;
-		Println("rotation: %", Target->Rotation);
 	}
 };
 
@@ -60,6 +58,7 @@ WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 	monkey->Position.z = 3;
 
 	ActorLoader(&world, "content/meshes/axis.fbx").Load();
+	ActorLoader(&world, "content/meshes/Sponza.fbx").Load().Pin()->Scale = { 0.02, 0.02, 0.02 };
 
 	world.Spawn(
 		MeshActor(AssetsManager::Add(Move(mesh)))
