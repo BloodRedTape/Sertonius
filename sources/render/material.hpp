@@ -2,11 +2,9 @@
 
 #include <core/math/vector3.hpp>
 
-using TextureId = u32;
-
-constexpr TextureId InvalidTextureId = -1;
+constexpr u32 InvalidTextureIndex = -1;
 
 struct Material {
 	Vector3f ColorValue;
-	TextureId ColorTextureId = InvalidTextureId;
+	u32 ColorTextureIndex = InvalidTextureIndex;
 };

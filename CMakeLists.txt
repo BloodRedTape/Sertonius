@@ -34,6 +34,7 @@ set(SAMPLE_SOURCES
     "sources/render/scene.cpp"
     "sources/core/transform.cpp" 
     "sources/framework/assets_manager.cpp"
+    "sources/framework/actor_loader.cpp"
 )
 
 set(SAMPLE_INCLUDE

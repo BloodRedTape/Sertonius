@@ -58,7 +58,7 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 		set->UpdateUniformBinding(1, 0, *model_uniform);
 		cmd_buffer->Bind(set);
 		
-		AssetsManager::Get().Get(render_mesh.Mesh)->CmdDraw(*cmd_buffer);
+		AssetsManager::Get(render_mesh.Mesh)->CmdDraw(*cmd_buffer);
 	}
 	cmd_buffer->EndRenderPass();
 }

@@ -3,6 +3,7 @@
 #include "sertonius/mesh_actor.hpp"
 #include "render/mesh.hpp"
 #include "framework/assets_manager.hpp"
+#include "framework/actor_loader.hpp"
 #include <core/print.hpp>
 
 class SpinningMovementCompennt : public ActorComponent {
@@ -49,18 +50,19 @@ WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 		AABB3f({}, {}),
 		"Mesh"
 	);
-	world.Spawn<MeshActor>(AssetsManager::Get().GetOrLoadMesh("content/meshes/axis.fbx"));
 	
 	Actor* spinner = world.Spawn(Actor()).Pin();
 	spinner->AddComponent<SpinningMovementCompennt>(5.f);
 	spinner->AddComponent<RolingMovementCompennt>({});
 	
-	MeshActor *monkey = world.Spawn(MeshActor(AssetsManager::Get().GetOrLoadMesh("content/meshes/monkey.fbx"))).Pin();
+	MeshActor *monkey = world.Spawn(MeshActor(AssetsManager::GetOrLoadMesh("content/meshes/monkey.fbx"))).Pin();
 	spinner->AttachChild(monkey);
 	monkey->Position.z = 3;
 
+	ActorLoader(&world, "content/meshes/axis.fbx").Load();
+
 	world.Spawn(
-		MeshActor(AssetsManager::Get().Add(Move(mesh)))
+		MeshActor(AssetsManager::Add(Move(mesh)))
 	);
 
 	return world.Spawn(Player());

@@ -18,10 +18,13 @@ struct Vertex {
 	static Array<VertexAttribute, 2> AttributesList;
 };
 
+constexpr u32 InvalidMaterialIndex = -1;
+
 struct MeshSection {
 	u32 BaseVertex = 0;
 	u32 BaseIndex = 0;
 	u32 IndicesCount = 0;
+	u32 MaterialIndex = InvalidMaterialIndex;
 };
 
 using Index = u32;
@@ -52,5 +55,4 @@ public:
 		return m_BoundingBox;
 	}
 
-	static Mesh LoadFromFile(StringView filepath);
 };
