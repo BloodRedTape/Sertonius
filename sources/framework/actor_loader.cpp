@@ -26,7 +26,9 @@ Mesh ActorLoader::MakeMeshFromNode(const aiNode *node, String name) {
 
     for (int i = 0; i < node->mNumMeshes; i++) {
         const aiMesh* mesh = m_Scene->mMeshes[node->mMeshes[i]];
-        
+        SX_ASSERT(mesh->mNumUVComponents[0] == 2);
+        SX_ASSERT(!mesh->mNumUVComponents[1]);
+
         for (int j = 0; j < mesh->mNumVertices; j++) {
             vertices.Add({
                 ToVector3(mesh->mVertices[j]),
@@ -147,8 +149,14 @@ ActorLoader::ActorLoader(World* world, StringView filepath):
     auto filedata = File::ReadEntire(filepath);
     assert(filedata.HasValue());
     String& data = filedata.Value();
-
-    m_Scene = m_Importer->ReadFileFromMemory(data.Data(), data.Size(), aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded);
+    u32 flags = aiProcess_CalcTangentSpace |
+                   aiProcess_Triangulate |
+                   aiProcess_JoinIdenticalVertices |
+                   aiProcess_MakeLeftHanded |
+                   aiProcess_RemoveRedundantMaterials |
+                   aiProcess_FlipUVs |
+                   aiProcess_FlipWindingOrder;
+    m_Scene = m_Importer->ReadFileFromMemory(data.Data(), data.Size(), aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
 }
 
 ActorLoader::~ActorLoader() {

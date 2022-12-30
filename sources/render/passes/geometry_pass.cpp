@@ -10,7 +10,7 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 			ShaderBinding(0, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
 			ShaderBinding(1, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
 			ShaderBinding(2, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
-			ShaderBinding(3, 1, ShaderBindingType::Texture,       ShaderStageBits::Vertex),
+			ShaderBinding(3, 1, ShaderBindingType::Texture,       ShaderStageBits::Fragment),
 		})
 	)
 {

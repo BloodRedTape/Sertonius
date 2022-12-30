@@ -27,4 +27,6 @@ public:
 	static const Material *Get(MaterialHandle handle);
 
 	static const Texture2D *Get(TextureHandle handle);
+
+	static ConstSpan<UniquePtr<Texture2D>> Textures();
 };

@@ -44,3 +44,6 @@ const Texture2D* AssetsManager::Get(TextureHandle handle){
 
 	return m_Textures[(u32)handle].Get();
 }
+ConstSpan<UniquePtr<Texture2D>> AssetsManager::Textures() {
+	return m_Textures;
+}
