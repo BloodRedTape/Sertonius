@@ -5,9 +5,10 @@
 #include <core/os/file.hpp>
 #include <cassert>
 
-Array<VertexAttribute, 2> Vertex::AttributesList = {
+Array<VertexAttribute, 3> Vertex::AttributesList = {
     VertexAttribute::Float32x3,
-    VertexAttribute::Float32x3
+    VertexAttribute::Float32x3,
+    VertexAttribute::Float32x2,
 };
 
 Mesh::Mesh(ConstSpan<Vertex> vertices, ConstSpan<Index> indices, const AABB3f &bounding_box, String name):
@@ -34,11 +35,9 @@ Mesh::Mesh(List<MeshSection> sections, ConstSpan<Vertex> vertices, ConstSpan<Ind
     m_Name(Move(name))
 {}
 
-void Mesh::CmdDraw(CommandBuffer& buffer)const{
+void Mesh::Bind(CommandBuffer& buffer)const{
 	buffer.BindVertexBuffer(m_VertexBuffer.Get());
 	buffer.BindIndexBuffer(m_IndexBuffer.Get(), IndicesType::Uint32);
-    for(const MeshSection &section: m_Sections)
-        buffer.DrawIndexed(section.IndicesCount, section.BaseIndex, section.BaseVertex);
 }
 
 

@@ -14,8 +14,9 @@
 struct Vertex {
 	Vector3f Position;
 	Vector3f Normal;
+	Vector2f UV;
 
-	static Array<VertexAttribute, 2> AttributesList;
+	static Array<VertexAttribute, 3> AttributesList;
 };
 
 constexpr u32 InvalidMaterialIndex = -1;
@@ -45,7 +46,11 @@ public:
 
 	Mesh &operator=(Mesh &&) = default;
 
-	void CmdDraw(CommandBuffer &buffer)const;
+	void Bind(CommandBuffer& buffer)const;
+
+	ConstSpan<MeshSection> Sections()const {
+		return m_Sections;
+	}
 
 	const String& Name()const {
 		return m_Name;

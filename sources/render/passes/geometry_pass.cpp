@@ -9,6 +9,8 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 		DescriptorSetLayout::Create({
 			ShaderBinding(0, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
 			ShaderBinding(1, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
+			ShaderBinding(2, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
+			ShaderBinding(3, 1, ShaderBindingType::Texture,       ShaderStageBits::Vertex),
 		})
 	)
 {
@@ -33,6 +35,7 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 	m_SetPool.NextFrame();
 	m_ModelUniformBufferPool.Reset();
+	m_MaterialUniformBufferPool.Reset();
 
 	cmd_buffer->ClearColor(m_RenderTargets.Albedo.Get(), Color::Black);
 	cmd_buffer->ClearColor(m_RenderTargets.Normal.Get(), Color::Black);
@@ -50,15 +53,32 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 	cmd_buffer->BeginRenderPass(m_RenderTargets.GeometryRenderPass.Get(), m_RenderTargets.GeometryFrameBuffer.Get());
 
 	for (const RenderMesh& render_mesh : scene.Meshes) {
+
 		UniformBuffer<ModelUniform>* model_uniform = m_ModelUniformBufferPool.AllocOrReuse();
 		model_uniform->Update({ render_mesh.Transform });
 
-		auto set = m_SetPool.Alloc();
-		set->UpdateUniformBinding(0, 0, m_CameraUniform);
-		set->UpdateUniformBinding(1, 0, *model_uniform);
-		cmd_buffer->Bind(set);
+		const Mesh *mesh = AssetsManager::Get(render_mesh.Mesh);
+		mesh->Bind(*cmd_buffer);
+
+		for (const MeshSection& section : mesh->Sections()) {
+			const Material* mat = AssetsManager::Get(MaterialHandle{ section.MaterialIndex });
+
+			UniformBuffer<MaterialUniform>* material_uniform = m_MaterialUniformBufferPool.AllocOrReuse();
+			material_uniform->Update({ mat->ColorValue });
+
+			auto set = m_SetPool.Alloc();
+
+			set->UpdateUniformBinding(0, 0, m_CameraUniform);
+			set->UpdateUniformBinding(1, 0, *model_uniform);
+			set->UpdateUniformBinding(2, 0, *material_uniform);
+			const Texture2D* albedo = AssetsManager::Get(TextureHandle(mat->ColorTextureIndex));
+			set->UpdateTextureBinding(3, 0, albedo ? albedo : Texture2D::White(), m_Sampler.Get());
+
+			cmd_buffer->Bind(set);
+
+			cmd_buffer->DrawIndexed(section.IndicesCount, section.BaseIndex, section.BaseVertex);
+		}
 		
-		AssetsManager::Get(render_mesh.Mesh)->CmdDraw(*cmd_buffer);
 	}
 	cmd_buffer->EndRenderPass();
 }

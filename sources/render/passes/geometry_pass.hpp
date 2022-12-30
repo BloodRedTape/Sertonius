@@ -18,17 +18,24 @@ class GeometryPass {
 	struct ModelUniform {
 		Matrix4f u_Model;
 	};
+
+	struct MaterialUniform {
+		Vector3f ColorValue;
+	};
 private:
 	const RenderTargets& m_RenderTargets;
 	
 	UniquePtr<DescriptorSetLayout> m_SetLayout;
 	UniquePtr<GraphicsPipeline> m_Pipeline{ nullptr };
-	static constexpr size_t MaxUniformBuffers = 1024;
+	static constexpr size_t MaxUniformBuffers = 800;
 	static constexpr size_t PreallocatedUniforms = 64;
 	SingleFrameDescriptorSetPool m_SetPool{ {MaxUniformBuffers, m_SetLayout.Get()}, PreallocatedUniforms };
 	ReusableObjectPool<UniformBuffer<ModelUniform>> m_ModelUniformBufferPool;
+	ReusableObjectPool<UniformBuffer<MaterialUniform>> m_MaterialUniformBufferPool;
 
 	UniformBuffer<CameraUniform> m_CameraUniform;
+
+	UniquePtr<Sampler> m_Sampler{ Sampler::Create({}) };
 public:
 	GeometryPass(const RenderTargets& targets);
 

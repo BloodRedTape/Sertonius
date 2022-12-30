@@ -47,11 +47,12 @@ WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 		"Mesh"
 	);
 	
-	ActorLoader(&world, "content/meshes/Sponza.fbx").Load();
-
+	ActorLoader(&world, "content/meshes/Sponza/Sponza.fbx").Load();
+#if 0
 	world.Spawn(
 		MeshActor(AssetsManager::Add(Move(mesh)))
 	);
+#endif
 
 	return world.Spawn(Player());
 }

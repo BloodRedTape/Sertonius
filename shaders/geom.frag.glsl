@@ -11,7 +11,7 @@ layout(location = 2)out vec4 f_WorldPosition;
 layout(location = 3)out vec4 f_Material;
 
 void main(){
-	f_Albedo = (v_Normal / 2.0 + vec4(0.5))* v_Albedo;
+	f_Albedo = v_Albedo;
 	f_Normal = v_Normal;
 	f_WorldPosition = v_WorldPosition;
 	f_Material = v_Material;

@@ -6,9 +6,13 @@
 #include <assimp/Importer.hpp>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/vector3.h>
+#include <core/print.hpp>
 
 static inline Vector3f ToVector3(aiVector3D vector){
     return {vector.x, vector.y, vector.z};
+}
+static inline Vector2f ToVector2(aiVector3D vector){
+    return {vector.x, vector.y};
 }
 
 Mesh ActorLoader::MakeMeshFromNode(const aiNode *node, String name) {
@@ -27,6 +31,7 @@ Mesh ActorLoader::MakeMeshFromNode(const aiNode *node, String name) {
             vertices.Add({
                 ToVector3(mesh->mVertices[j]),
                 ToVector3(mesh->mNormals[j]),
+                ToVector2(mesh->mTextureCoords[0][j]),
             });
         }
         
@@ -44,6 +49,7 @@ Mesh ActorLoader::MakeMeshFromNode(const aiNode *node, String name) {
         section.BaseVertex = vertex_offset;
         section.BaseIndex = index_offset;
         section.IndicesCount = indices_count;
+        section.MaterialIndex = GetMaterial(mesh->mMaterialIndex);
         sections.Add(section);
 
         vertex_offset += mesh->mNumVertices;
@@ -77,12 +83,50 @@ WeakActorPtr<Actor> ActorLoader::MakeActorFromNode(const class aiNode* node) {
     return actor_ptr;
 }
 
+void PopulateAlbedo(Material &mat, class aiMaterial *in_mat) {
+    mat.ColorValue = { 1, 1, 1 };
+
+}
+
+class MaterialLoader {
+private:
+    aiMaterial* m_Source = nullptr;
+    String m_ActorFileDirectory;
+public:
+    MaterialLoader(aiMaterial* material, String actor_file_directory):
+        m_Source(material),
+        m_ActorFileDirectory(Move(actor_file_directory))
+    {}
+
+    void LoadAlbedo(Material& out) {
+        {
+            aiColor3D color_value;
+            if (m_Source->Get(AI_MATKEY_COLOR_DIFFUSE, color_value) == aiReturn_SUCCESS)
+                out.ColorValue = { color_value.r, color_value.g, color_value.b };
+        }
+        {
+            if (m_Source->GetTextureCount(aiTextureType_DIFFUSE)) {
+                aiString local_texture_path;
+                if (m_Source->GetTexture(aiTextureType_DIFFUSE, 0, &local_texture_path) == aiReturn_SUCCESS) {
+                    String full_texture_path = m_ActorFileDirectory + local_texture_path.C_Str();
+                    if (File::Exists(full_texture_path))
+                        out.ColorTextureIndex = AssetsManager::GetOrLoadTexture(full_texture_path);
+                }
+            }
+        }
+    }
+};
+
 MaterialHandle ActorLoader::GetMaterial(int material_index) {
     auto it = m_MaterialsMap.find(material_index);
 
     if (it == m_MaterialsMap.end()) {
         Material mat;
+
+        MaterialLoader loader(m_Scene->mMaterials[material_index], m_FileDirectory);
+        loader.LoadAlbedo(mat);
         MaterialHandle handle = AssetsManager::Add(mat);
+
         it = m_MaterialsMap.insert({ material_index, handle }).first;
     }
 
@@ -93,6 +137,11 @@ ActorLoader::ActorLoader(World* world, StringView filepath):
 	m_World(world)
 {
 	SX_ASSERT(File::Exists(filepath));
+
+    m_FileDirectory = filepath;
+    char *last_delimiter = String::FindLast(m_FileDirectory.Data(), "/") + 1;
+    m_FileDirectory = String{ m_FileDirectory.Data(), size_t(last_delimiter - m_FileDirectory.Data())};
+    Println("FileDir: %", m_FileDirectory);
     
     m_Importer = new Assimp::Importer();
     auto filedata = File::ReadEntire(filepath);

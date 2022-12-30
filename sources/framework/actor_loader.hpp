@@ -14,6 +14,7 @@ private:
 	const class aiScene* m_Scene = nullptr;
 	Assimp::Importer* m_Importer = nullptr;
 	World* m_World = nullptr;
+	String m_FileDirectory;
 public:
 	ActorLoader(World* world, StringView filepath);
 

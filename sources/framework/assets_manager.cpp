@@ -4,6 +4,10 @@ static List<UniquePtr<Texture2D>> m_Textures;
 static List<Material> m_Materials;
 static List<Mesh> m_Meshes;
 
+TextureHandle AssetsManager::GetOrLoadTexture(StringView filepath) {
+	return Add(UniquePtr<Texture2D>{ Texture2D::Create(filepath) });
+}
+
 MeshHandle AssetsManager::Add(Mesh mesh) {
 	MeshHandle handle = m_Meshes.Size();
 	m_Meshes.Add(Move(mesh));

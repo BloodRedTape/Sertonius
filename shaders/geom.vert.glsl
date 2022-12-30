@@ -2,6 +2,7 @@
 
 layout(location = 0)in vec3 a_ModelPosition;
 layout(location = 1)in vec3 a_Normal;
+layout(location = 2)in vec2 a_UV;
 
 layout(location = 0)out vec4 v_Albedo;
 layout(location = 1)out vec4 v_Normal;
@@ -18,14 +19,14 @@ layout(binding = 1, row_major)uniform Model{
 };
 
 layout(binding = 2, row_major)uniform Material {
-	vec4 u_ColorValue;
+	vec3 u_ColorValue;
 };
 
 layout(binding = 3)uniform sampler2D u_ColorTexture;
 
 void main(){
 	gl_Position = u_Projection * u_View * u_Model * vec4(a_ModelPosition, 1.0);
-	v_Albedo = vec4(1);
+	v_Albedo = vec4(u_ColorValue.xyz, 1) * texture(u_ColorTexture, a_UV);
 	v_Normal = vec4(a_Normal, 1);
 	v_WorldPosition = vec4(a_ModelPosition, 1);
 	v_Material = vec4(0);
