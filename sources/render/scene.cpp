@@ -7,11 +7,14 @@ RenderMesh::RenderMesh(const MeshComponent* mesh) :
 	Mesh(mesh->Mesh)
 {}
 
-RenderCamera::RenderCamera(const CameraComponent* camera):
-	Transform(camera->Owner()->GlobalTransform()),
+RenderCamera::RenderCamera(const CameraComponent* camera) :
 	Camera(*camera)
-{}
+{
+	Rotation = camera->Owner()->Rotation;
+	Vector3f _, __;
+	camera->Owner()->GlobalTransform().Decompose(Position, _, __);
+}
 
 Matrix4f RenderCamera::MakeViewMatrix() const{
-	return Transform.GetInverse();
+	return Math::Rotate<float>(-Math::Rad(Rotation)) * Math::Translate(-Position);
 }

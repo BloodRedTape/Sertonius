@@ -14,10 +14,6 @@ private:
 private:
 	AssetsManager() = default;
 public:
-	static TextureHandle GetOrLoadTexture(StringView filepath);
-
-	static MeshHandle GetOrLoadMesh(StringView filepath);
-
 	static MeshHandle Add(Mesh mesh);
 
 	static MaterialHandle Add(Material mat);

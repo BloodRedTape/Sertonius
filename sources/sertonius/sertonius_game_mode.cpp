@@ -19,12 +19,10 @@ public:
 		ActorComponent::Tick(dt);
 		m_Time += dt;
 
-
 		Actor* Target = Owner();
 		
 		Target->Position = { cos(m_Time), sin(m_Time), 0};
 		Target->Position *= m_Radius;
-
 	}
 };
 
@@ -40,25 +38,16 @@ public:
 
 WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 	Mesh mesh({
-			Vertex{{ 0.5f, 0.f, 0.5f}, {}},
-			Vertex{{-0.5f, 0.f, 0.5f}, {}},
-			Vertex{{-0.5f, 0.f,-0.5f}, {}},
+			Vertex{{ 0.5f, 0.0f, 0.5f}, {}},
+			Vertex{{ 0.5f, 0.5f,-0.5f}, {}},
+			Vertex{{-0.5f, 0.0f,-0.5f}, {}},
 		},
 		{ 0, 1, 2 },
 		AABB3f({}, {}),
 		"Mesh"
 	);
 	
-	Actor* spinner = world.Spawn(Actor()).Pin();
-	spinner->AddComponent<SpinningMovementCompennt>(5.f);
-	spinner->AddComponent<RolingMovementCompennt>({});
-	
-	MeshActor *monkey = world.Spawn(MeshActor(AssetsManager::GetOrLoadMesh("content/meshes/monkey.fbx"))).Pin();
-	spinner->AttachChild(monkey);
-	monkey->Position.z = 3;
-
-	ActorLoader(&world, "content/meshes/axis.fbx").Load();
-	ActorLoader(&world, "content/meshes/Sponza.fbx").Load().Pin()->Scale = { 0.02, 0.02, 0.02 };
+	ActorLoader(&world, "content/meshes/Sponza.fbx").Load();
 
 	world.Spawn(
 		MeshActor(AssetsManager::Add(Move(mesh)))

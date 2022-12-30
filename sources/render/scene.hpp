@@ -13,7 +13,8 @@ struct RenderMesh{
 };
 
 struct RenderCamera : Camera{
-	Matrix4f Transform;
+	Vector3f Position;
+	Vector3f Rotation;
 
 	RenderCamera() = default;
 

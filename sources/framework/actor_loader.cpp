@@ -50,6 +50,9 @@ Mesh ActorLoader::MakeMeshFromNode(const aiNode *node, String name) {
         index_offset += indices_count;
     }
 
+    for (Vertex& vertex : vertices)
+        vertex.Position *= 0.01f;
+
     return Mesh(Move(sections), vertices, indices, AABB3f({ 0, 0 }, { 0, 0 }), name);
 }
 
@@ -96,7 +99,7 @@ ActorLoader::ActorLoader(World* world, StringView filepath):
     assert(filedata.HasValue());
     String& data = filedata.Value();
 
-    m_Scene = m_Importer->ReadFileFromMemory(data.Data(), data.Size(), aiProcess_Triangulate | aiProcess_GenNormals);
+    m_Scene = m_Importer->ReadFileFromMemory(data.Data(), data.Size(), aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_ConvertToLeftHanded);
 }
 
 ActorLoader::~ActorLoader() {
@@ -104,5 +107,7 @@ ActorLoader::~ActorLoader() {
 }
 
 WeakActorPtr<Actor> ActorLoader::Load() {
-    return MakeActorFromNode(m_Scene->mRootNode);
+    auto actor = MakeActorFromNode(m_Scene->mRootNode);
+    actor.Pin()->Rotation.x += 90;
+    return actor;
 }

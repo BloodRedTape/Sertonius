@@ -3,6 +3,7 @@
 #include <core/print.hpp>
 #include <core/os/mouse.hpp>
 #include <core/math/transform.hpp>
+#include <core/math/functions.hpp>
 #include <imgui/widgets.hpp>
 
 Player::Player(){
@@ -34,7 +35,7 @@ void Player::Tick(float dt){
 	if (Keyboard::IsKeyPressed(Key::LeftShift))
 		direction.z = -1.f;
 #if 1
-	Position += (Math::Rotate<float>(Math::Rad(Rotation)) * Vector4f(direction, 1.f)).XYZ() * dt;
+	Position += (Math::Rotate<float>(Math::Rad(Vector3f{ 0, 0, Rotation.z})) * Vector4f(direction, 1.f)).XYZ() * dt;
 #else
 	Position += direction * dt;
 #endif
@@ -44,6 +45,7 @@ void Player::Tick(float dt){
 void Player::OnMouseMove(Vector2s offset){
 	//Println("Offset: %", offset);
 	Rotation.x -=  offset.y;
+	Rotation.x = Math::Clamp(Rotation.x, -90.f, 90.f);
 	Rotation.z -=  offset.x;
 }
 
