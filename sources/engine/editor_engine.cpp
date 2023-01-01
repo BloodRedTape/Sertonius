@@ -32,12 +32,6 @@ void EditorEngine::OnImGui(){
 	ImGui::Begin("Log");
 	m_Log.DrawImGuiText();
 	ImGui::End();
-
-	ImGui::Begin("Assets");
-	for (const auto& tex : AssetsManager::Textures()) {
-		ImGui::Image((ImTextureID)tex.Get(), ImVec2(200, 200));
-	}
-	ImGui::End();
 }
 
 void EditorEngine::Tick(float dt){

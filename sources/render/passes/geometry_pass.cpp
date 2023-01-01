@@ -9,7 +9,7 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 		DescriptorSetLayout::Create({
 			ShaderBinding(0, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
 			ShaderBinding(1, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
-			ShaderBinding(2, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
+			ShaderBinding(2, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Fragment),
 			ShaderBinding(3, 1, ShaderBindingType::Texture,       ShaderStageBits::Fragment),
 		})
 	)
@@ -22,6 +22,9 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 	GraphicsPipelineProperties props;
 	props.VertexAttributes = Vertex::AttributesList;
 	props.Shaders = shaders;
+	props.BlendFunction = BlendFunction::Add;
+	props.SrcBlendFactor = BlendFactor::SrcAlpha;
+	props.DstBlendFactor = BlendFactor::OneMinusSrcAlpha;
 	props.Layout = m_SetLayout.Get();
 	props.DepthFunction = DepthFunction::Less;
 	props.Pass = targets.GeometryRenderPass.Get();
