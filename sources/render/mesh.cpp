@@ -5,7 +5,8 @@
 #include <core/os/file.hpp>
 #include <cassert>
 
-Array<VertexAttribute, 3> Vertex::AttributesList = {
+Array<VertexAttribute, 4> Vertex::AttributesList = {
+    VertexAttribute::Float32x3,
     VertexAttribute::Float32x3,
     VertexAttribute::Float32x3,
     VertexAttribute::Float32x2,

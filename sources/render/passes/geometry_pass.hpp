@@ -35,6 +35,8 @@ private:
 
 	UniformBuffer<CameraUniform> m_CameraUniform;
 
+	UniquePtr<Texture2D> m_DefaultNormal;
+
 	UniquePtr<Sampler> m_Sampler{ Sampler::Create({}) };
 public:
 	GeometryPass(const RenderTargets& targets);

@@ -11,7 +11,11 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 			ShaderBinding(1, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Vertex),
 			ShaderBinding(2, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Fragment),
 			ShaderBinding(3, 1, ShaderBindingType::Texture,       ShaderStageBits::Fragment),
+			ShaderBinding(4, 1, ShaderBindingType::Texture,       ShaderStageBits::Fragment),
 		})
+	),
+	m_DefaultNormal(
+		Texture2D::Create(Image(1, 1, Color(0, 0, 0.5f)), TextureUsageBits::Sampled, TextureLayout::ShaderReadOnlyOptimal)
 	)
 {
 
@@ -76,6 +80,8 @@ void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){
 			set->UpdateUniformBinding(2, 0, *material_uniform);
 			const Texture2D* albedo = AssetsManager::Get(TextureHandle(mat->ColorTextureIndex));
 			set->UpdateTextureBinding(3, 0, albedo ? albedo : Texture2D::White(), m_Sampler.Get());
+			const Texture2D* normal = AssetsManager::Get(TextureHandle(mat->NormalTextureIndex));
+			set->UpdateTextureBinding(4, 0, normal ? normal : m_DefaultNormal.Get(), m_Sampler.Get());
 
 			cmd_buffer->Bind(set);
 

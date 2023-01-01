@@ -33,6 +33,7 @@ Mesh ActorLoader::MakeMeshFromNode(const aiNode *node, String name) {
             vertices.Add({
                 ToVector3(mesh->mVertices[j]),
                 ToVector3(mesh->mNormals[j]),
+                ToVector3(mesh->mTangents[j]),
                 ToVector2(mesh->mTextureCoords[0][j]),
             });
         }
@@ -117,6 +118,19 @@ public:
             }
         }
     }
+
+    void LoadNormal(Material& out) {
+        if (m_Source->GetTextureCount(aiTextureType_HEIGHT)) {
+            aiString local_texture_path;
+            if (m_Source->GetTexture(aiTextureType_HEIGHT, 0, &local_texture_path) == aiReturn_SUCCESS) {
+                String full_texture_path = m_ActorFileDirectory + local_texture_path.C_Str();
+                Println("LoadingNormalMap: %", full_texture_path);
+                if (File::Exists(full_texture_path))
+                    out.NormalTextureIndex = AssetsManager::GetOrLoadTexture(full_texture_path);
+            }
+
+        }
+    }
 };
 
 MaterialHandle ActorLoader::GetMaterial(int material_index) {
@@ -127,6 +141,7 @@ MaterialHandle ActorLoader::GetMaterial(int material_index) {
 
         MaterialLoader loader(m_Scene->mMaterials[material_index], m_FileDirectory);
         loader.LoadAlbedo(mat);
+        loader.LoadNormal(mat);
         MaterialHandle handle = AssetsManager::Add(mat);
 
         it = m_MaterialsMap.insert({ material_index, handle }).first;
@@ -149,14 +164,8 @@ ActorLoader::ActorLoader(World* world, StringView filepath):
     auto filedata = File::ReadEntire(filepath);
     assert(filedata.HasValue());
     String& data = filedata.Value();
-    u32 flags = aiProcess_CalcTangentSpace |
-                   aiProcess_Triangulate |
-                   aiProcess_JoinIdenticalVertices |
-                   aiProcess_MakeLeftHanded |
-                   aiProcess_RemoveRedundantMaterials |
-                   aiProcess_FlipUVs |
-                   aiProcess_FlipWindingOrder;
-    m_Scene = m_Importer->ReadFileFromMemory(data.Data(), data.Size(), aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+    u32 flags = aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_CalcTangentSpace;
+    m_Scene = m_Importer->ReadFileFromMemory(data.Data(), data.Size(), flags);
 }
 
 ActorLoader::~ActorLoader() {

@@ -14,9 +14,10 @@
 struct Vertex {
 	Vector3f Position;
 	Vector3f Normal;
+	Vector3f Tangent;
 	Vector2f UV;
 
-	static Array<VertexAttribute, 3> AttributesList;
+	static Array<VertexAttribute, 4> AttributesList;
 };
 
 constexpr u32 InvalidMaterialIndex = -1;
