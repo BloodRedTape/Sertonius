@@ -9,7 +9,8 @@ CompositePass::CompositePass(const RenderTargets& targets) :
 			ShaderBinding(1, 1, ShaderBindingType::Texture, ShaderStageBits::Compute),
 			ShaderBinding(2, 1, ShaderBindingType::Texture, ShaderStageBits::Compute),
 			ShaderBinding(3, 1, ShaderBindingType::Texture, ShaderStageBits::Compute),
-			ShaderBinding(4, 1, ShaderBindingType::StorageTexture, ShaderStageBits::Compute)
+			ShaderBinding(4, 1, ShaderBindingType::Texture, ShaderStageBits::Compute),
+			ShaderBinding(5, 1, ShaderBindingType::StorageTexture, ShaderStageBits::Compute)
 			})
 	),
 	m_SetPool(
@@ -41,7 +42,8 @@ void CompositePass::CmdRender(CommandBuffer* cmd_buffer, const Framebuffer *fb){
 	m_Set->UpdateTextureBinding(1, 0, m_RenderTargets.Normal.Get(), m_Sampler.Get());
 	m_Set->UpdateTextureBinding(2, 0, m_RenderTargets.Position.Get(), m_Sampler.Get());
 	m_Set->UpdateTextureBinding(3, 0, m_RenderTargets.Material.Get(), m_Sampler.Get());
-	m_Set->UpdateStorageTextureBinding(4, 0, PresentTexture);
+	m_Set->UpdateTextureBinding(4, 0, m_RenderTargets.Lighting.Get(), m_Sampler.Get());
+	m_Set->UpdateStorageTextureBinding(5, 0, PresentTexture);
 
 	cmd_buffer->Bind(m_Pipeline.Get());
 	cmd_buffer->Bind(m_Set.Get());
@@ -49,12 +51,14 @@ void CompositePass::CmdRender(CommandBuffer* cmd_buffer, const Framebuffer *fb){
 	cmd_buffer->ChangeLayout(m_RenderTargets.Normal.Get(), TextureLayout::ShaderReadOnlyOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Position.Get(), TextureLayout::ShaderReadOnlyOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Material.Get(), TextureLayout::ShaderReadOnlyOptimal);
+	cmd_buffer->ChangeLayout(m_RenderTargets.Lighting.Get(), TextureLayout::ShaderReadOnlyOptimal);
 	cmd_buffer->ChangeLayout(PresentTexture, TextureLayout::General);
 	cmd_buffer->Dispatch(std::ceil(fb->Size().x/16.f), std::ceil(fb->Size().y/16.f), 1);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Albedo.Get(), TextureLayout::ColorAttachmentOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Normal.Get(), TextureLayout::ColorAttachmentOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Position.Get(), TextureLayout::ColorAttachmentOptimal);
 	cmd_buffer->ChangeLayout(m_RenderTargets.Material.Get(), TextureLayout::ColorAttachmentOptimal);
+	cmd_buffer->ChangeLayout(m_RenderTargets.Lighting.Get(), TextureLayout::ColorAttachmentOptimal);
 	cmd_buffer->ChangeLayout(PresentTexture, TextureLayout::PresentSrcOptimal);
 }
 

@@ -35,6 +35,7 @@ set(SAMPLE_SOURCES
     "sources/core/transform.cpp" 
     "sources/framework/assets_manager.cpp"
     "sources/framework/actor_loader.cpp"
+    "sources/render/passes/lighting_pass.cpp"
 )
 
 set(SAMPLE_INCLUDE

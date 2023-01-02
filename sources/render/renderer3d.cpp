@@ -12,6 +12,7 @@ void Renderer3D::CmdRender(CommandBuffer* cmd_buffer, const Framebuffer* fb, con
 	OnImGui();
 
 	m_GeometryPass.CmdRender(cmd_buffer, scene);
+	m_LightingPass.CmdRender(cmd_buffer, scene);
 	m_CompositePass.CmdRender(cmd_buffer, fb);
 }
 
@@ -27,6 +28,7 @@ void Renderer3D::OnImGui(){
 	ImGui::Image(m_RenderTargets.Normal.Get(), rt_size);
 	ImGui::Image(m_RenderTargets.Position.Get(), rt_size);
 	ImGui::Image(m_RenderTargets.Depth.Get(), rt_size);
+	ImGui::Image(m_RenderTargets.Lighting.Get(), rt_size);
 
 	ImGui::End();
 }

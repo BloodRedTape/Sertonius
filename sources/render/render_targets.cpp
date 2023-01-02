@@ -16,6 +16,9 @@ RenderTargets::RenderTargets(Vector2s size):
 	Depth(
 		Texture2D::Create(size, DepthFormat, TextureUsageBits::DepthStencilOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::DepthStencilAttachmentOptimal)
 	),
+	Lighting(
+		Texture2D::Create(size, LightingFormat, TextureUsageBits::ColorAttachmentOptimal | TextureUsageBits::Sampled | TextureUsageBits::TransferDst, TextureLayout::ColorAttachmentOptimal)
+	),
 	GeometryRenderPass(
 		RenderPass::Create(RenderPassProperties{
 			ConstSpan<AttachmentDescription>( {
@@ -68,6 +71,28 @@ RenderTargets::RenderTargets(Vector2s size):
 				Depth.Get()
 			},
 			GeometryRenderPass.Get()
+		})
+	),
+	LightingRenderPass(
+		RenderPass::Create(RenderPassProperties{
+			ConstSpan<AttachmentDescription>({
+				AttachmentDescription{
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					TextureLayout::ColorAttachmentOptimal,
+					Lighting->Format(),
+					SamplePoints::Samples_1
+				}
+			})
+		})
+	),
+	LightingFrameBuffer(
+		Framebuffer::Create({
+			size,
+			{
+				Lighting.Get()
+			},
+			LightingRenderPass.Get()
 		})
 	)
 {}

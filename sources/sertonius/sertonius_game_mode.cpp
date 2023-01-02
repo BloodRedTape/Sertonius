@@ -1,6 +1,7 @@
 #include "sertonius/sertonius_game_mode.hpp"
 #include "sertonius/player.hpp"
 #include "sertonius/mesh_actor.hpp"
+#include "sertonius/point_light_actor.hpp"
 #include "render/mesh.hpp"
 #include "framework/assets_manager.hpp"
 #include "framework/actor_loader.hpp"
@@ -48,6 +49,8 @@ WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 	);
 	
 	ActorLoader(&world, "content/meshes/Sponza/Sponza.fbx").Load();
+
+	world.Spawn(PointLightActor({})).Pin()->Position.z = 0;
 #if 0
 	world.Spawn(
 		MeshActor(AssetsManager::Add(Move(mesh)))

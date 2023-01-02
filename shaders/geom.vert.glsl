@@ -24,7 +24,7 @@ void main(){
 	gl_Position = u_Projection * u_View * u_Model * vec4(a_ModelPosition, 1.0);
 	v_Normal = normalize(mat3(u_Model) * a_Normal);
 	v_Tangent = normalize(mat3(u_Model) * a_Tangent);
-	v_WorldPosition = vec4(a_ModelPosition, 1);
+	v_WorldPosition = u_Model * vec4(a_ModelPosition, 1);
 	v_Material = vec4(0);
 	v_UV = a_UV;
 }

@@ -9,6 +9,7 @@
 #include "render/mesh.hpp"
 #include "render/render_targets.hpp"
 #include "render/passes/geometry_pass.hpp"
+#include "render/passes/lighting_pass.hpp"
 #include "render/passes/composite_pass.hpp"
 #include "render/scene.hpp"
 #include "imgui/backend.hpp"
@@ -19,6 +20,7 @@ private:
 	RenderTargets m_RenderTargets;
 
 	GeometryPass m_GeometryPass{m_RenderTargets};
+	LightingPass m_LightingPass{ m_RenderTargets };
 	CompositePass m_CompositePass{ m_RenderTargets };
 public:
 	Renderer3D(const FramebufferChain &chain);

@@ -18,3 +18,10 @@ RenderCamera::RenderCamera(const CameraComponent* camera) :
 Matrix4f RenderCamera::MakeViewMatrix() const{
 	return Math::Rotate<float>(-Math::Rad(Rotation)) * Math::Translate(-Position);
 }
+
+RenderPointLight::RenderPointLight(const PointLightComponent* light):
+	PointLight(light->PointLight)
+{
+	Vector3f _, __;
+	light->Owner()->GlobalTransform().Decompose(Position, _, __);
+}

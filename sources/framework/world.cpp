@@ -65,6 +65,8 @@ Scene World::BuildScene(){
 	Scene scene;
 	for (const MeshComponent& mesh : m_Components.TypeRange<MeshComponent>())
 		scene.Meshes.Add(&mesh);
+	for (const PointLightComponent& light: m_Components.TypeRange<PointLightComponent>())
+		scene.PointLights.Add(&light);
 	
 	auto camera_range = m_Components.TypeRange<CameraComponent>();
 
