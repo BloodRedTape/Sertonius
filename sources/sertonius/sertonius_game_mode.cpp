@@ -50,7 +50,7 @@ WeakActorPtr<Pawn> SertoniusGameMode::InitWorld(World& world) {
 	
 	ActorLoader(&world, "content/meshes/Sponza/Sponza.fbx").Load();
 
-	world.Spawn(PointLightActor({})).Pin()->Position.z = 0;
+	world.Spawn(PointLightActor({})).Pin()->Position.z = 2;
 #if 0
 	world.Spawn(
 		MeshActor(AssetsManager::Add(Move(mesh)))

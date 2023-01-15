@@ -18,8 +18,16 @@ layout(binding = 2, row_major)uniform Material {
 layout(binding = 3)uniform sampler2D u_ColorTexture;
 layout(binding = 4)uniform sampler2D u_NormalTexture;
 
+vec3 UnpackNormal(vec3 normal) {
+	return normal * 2.0 - 1.0;
+}
+
+vec3 PackNormal(vec3 normal) {
+	return (normal + 1.0) / 2.0;
+}
+
 vec3 CalculateNormal() {
-	vec3 normal_texture = texture(u_NormalTexture, v_UV).xyz * vec3(2.0) - vec3(1.0);
+	vec3 normal_texture = UnpackNormal(texture(u_NormalTexture, v_UV).xyz);
 
 	mat3 tbn = mat3(
 		v_Tangent,
@@ -35,7 +43,7 @@ vec4 CalculateColor() {
 
 void main(){
 	f_Albedo = CalculateColor();
-	f_Normal = vec4(CalculateNormal().xyz, 1.0);
+	f_Normal = vec4(PackNormal(CalculateNormal().xyz), 1.0);
 	f_WorldPosition = v_WorldPosition;
 	f_Material = v_Material;
 }

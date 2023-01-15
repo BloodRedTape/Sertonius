@@ -5,5 +5,5 @@
 
 struct PointLight {
 	Vector3f Color = { 1.f, 1.f, 1.f };
-	float Radius = 5.f;
+	float Radius = 10.f;
 };

@@ -20,11 +20,16 @@ layout(binding = 1, row_major)uniform Model{
 	mat4 u_Model;
 };
 
+vec3 HomoToNoHomo3(vec4 homo) {
+	return vec3(homo.xyz / homo.w);
+}
+
 void main(){
-	gl_Position = u_Projection * u_View * u_Model * vec4(a_ModelPosition, 1.0);
+	vec4 world_position = u_Model * vec4(a_ModelPosition, 1.0);
+	gl_Position = u_Projection * u_View * world_position;
 	v_Normal = normalize(mat3(u_Model) * a_Normal);
 	v_Tangent = normalize(mat3(u_Model) * a_Tangent);
-	v_WorldPosition = u_Model * vec4(a_ModelPosition, 1);
+	v_WorldPosition = vec4(HomoToNoHomo3(world_position), 1.0);
 	v_Material = vec4(0);
 	v_UV = a_UV;
 }
