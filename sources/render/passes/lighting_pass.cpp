@@ -1,4 +1,5 @@
 #include "lighting_pass.hpp"
+#include "render/common.hpp"
 
 Array<VertexAttribute, 4> LightVertex::AttributesList{
 	VertexAttribute::Float32x2,
@@ -17,8 +18,8 @@ LightingPass::LightingPass(const RenderTargets& rts):
 	)
 {
 	FixedList<const Shader*, 2> shaders;
-	shaders.Add(Shader::Create(ShaderLang::GLSL, ShaderStageBits::Vertex, File::ReadEntire("shaders/light.vert.glsl").Value()));
-	shaders.Add(Shader::Create(ShaderLang::GLSL, ShaderStageBits::Fragment, File::ReadEntire("shaders/light.frag.glsl").Value()));
+	shaders.Add(Shader::Create(ShaderStageBits::Vertex, File::ReadEntire("shaders/light.vert.glsl").Value(), DefaultCompileOptions));
+	shaders.Add(Shader::Create(ShaderStageBits::Fragment, File::ReadEntire("shaders/light.frag.glsl").Value(), DefaultCompileOptions));
 
 	GraphicsPipelineProperties props;
 	props.VertexAttributes = LightVertex::AttributesList;

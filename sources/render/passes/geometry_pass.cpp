@@ -1,5 +1,6 @@
 #include "render/passes/geometry_pass.hpp"
 #include "framework/assets_manager.hpp"
+#include "render/common.hpp"
 #include <core/fixed_list.hpp>
 #include <core/os/file.hpp>
 
@@ -20,8 +21,8 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 {
 
 	FixedList<const Shader*, 2> shaders;
-	shaders.Add(Shader::Create(ShaderLang::GLSL, ShaderStageBits::Vertex, File::ReadEntire("shaders/geom.vert.glsl").Value()));
-	shaders.Add(Shader::Create(ShaderLang::GLSL, ShaderStageBits::Fragment, File::ReadEntire("shaders/geom.frag.glsl").Value()));
+	shaders.Add(Shader::Create(ShaderStageBits::Vertex, File::ReadEntire("shaders/geom.vert.glsl").Value(), DefaultCompileOptions));
+	shaders.Add(Shader::Create(ShaderStageBits::Fragment, File::ReadEntire("shaders/geom.frag.glsl").Value(), DefaultCompileOptions));
 
 	GraphicsPipelineProperties props;
 	props.VertexAttributes = Vertex::AttributesList;

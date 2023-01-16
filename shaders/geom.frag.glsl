@@ -1,4 +1,5 @@
-#version 440 core
+
+#include "common.glsl"
 
 layout(location = 0)in vec3 v_Normal;
 layout(location = 1)in vec3 v_Tangent;
@@ -17,14 +18,6 @@ layout(binding = 2, row_major)uniform Material {
 
 layout(binding = 3)uniform sampler2D u_ColorTexture;
 layout(binding = 4)uniform sampler2D u_NormalTexture;
-
-vec3 UnpackNormal(vec3 normal) {
-	return normal * 2.0 - 1.0;
-}
-
-vec3 PackNormal(vec3 normal) {
-	return (normal + 1.0) / 2.0;
-}
 
 vec3 CalculateNormal() {
 	vec3 normal_texture = UnpackNormal(texture(u_NormalTexture, v_UV).xyz);

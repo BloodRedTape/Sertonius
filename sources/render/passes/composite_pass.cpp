@@ -1,4 +1,5 @@
 #include "render/passes/composite_pass.hpp"
+#include "render/common.hpp"
 #include <cmath>
 
 CompositePass::CompositePass(const RenderTargets& targets) :
@@ -25,7 +26,7 @@ CompositePass::CompositePass(const RenderTargets& targets) :
 		Sampler::Create({})
 	)
 {
-	const Shader* shader = Shader::Create(ShaderLang::GLSL, ShaderStageBits::Compute, File::ReadEntire("shaders/comp.comp.glsl").Value());
+	const Shader* shader = Shader::Create(ShaderStageBits::Compute, File::ReadEntire("shaders/comp.comp.glsl").Value(), DefaultCompileOptions);
 	
 	m_Pipeline = ComputePipeline::Create({
 		shader,

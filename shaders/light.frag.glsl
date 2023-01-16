@@ -1,4 +1,5 @@
-#version 440 core
+
+#include "common.glsl"
 
 layout(location = 0)in flat vec3 v_LightColor;
 layout(location = 1)in vec3 v_LightPosition;
@@ -8,14 +9,6 @@ layout(location = 0)out vec4 f_Lighting;
 
 layout(binding = 0)uniform sampler2D u_Positions;
 layout(binding = 1)uniform sampler2D u_Normals;
-
-vec3 UnpackNormal(vec3 normal) {
-	return normal * 2.0 - 1.0;
-}
-
-vec3 PackNormal(vec3 normal) {
-	return (normal + 1.0) / 2.0;
-}
 
 vec3 Grayscale(vec3 color) {
 	return vec3((color.r + color.g + color.b) / 3);
