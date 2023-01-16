@@ -5,7 +5,9 @@ EditorEngine::EditorEngine(Vector2s size, GameMode* game_mode):
 	Engine(size, game_mode),
 	m_RenderTexture(size, TextureFormat::BGRA8, TextureFormat::Unknown),
 	m_LastOutputFramebufferSize(m_RenderTexture.Size())
-{}
+{
+	Mouse::SetVisible(false);
+}
 
 const Framebuffer* EditorEngine::OutputFramebuffer(){
 	return m_RenderTexture.Framebuffer();
@@ -46,11 +48,12 @@ void EditorEngine::Tick(float dt){
 
 	if (!(offset.x && offset.y))
 		return;
+	
 
 	m_LastMousePosition = mouse_position;
 
-	if (!m_Viewport.Inside(mouse_position))
-		return Println("Outside");
+	if (!m_IsViewportInFocus)
+		return;
 
 	player->OnMouseMove(offset);
 }
@@ -75,15 +78,32 @@ void EditorEngine::OnEvent(const Event& e){
 
 	if (!player)return;
 
-	if (e.Type == EventType::MouseButtonPress) {
-		Vector2s point = { e.MouseButtonPress.x, e.MouseButtonPress.y };
-		if (m_Viewport.Inside(point))
-			player->OnMouseButtonPress(e.MouseButtonPress.Button, point - m_Viewport.Min);
+	if (m_IsViewportInFocus) {
+
+		if (e.Type == EventType::MouseButtonPress) {
+			Vector2s point = { e.MouseButtonPress.x, e.MouseButtonPress.y };
+			if (m_Viewport.Inside(point))
+				player->OnMouseButtonPress(e.MouseButtonPress.Button, point - m_Viewport.Min);
+		}
+		if (e.Type == EventType::MouseButtonRelease) {
+			Vector2s point = { e.MouseButtonRelease.x, e.MouseButtonRelease.y };
+			if (m_Viewport.Inside(point))
+				player->OnMouseButtonRelease(e.MouseButtonRelease.Button, point - m_Viewport.Min);
+		}
 	}
-	if (e.Type == EventType::MouseButtonRelease) {
-		Vector2s point = { e.MouseButtonRelease.x, e.MouseButtonRelease.y };
-		if (m_Viewport.Inside(point))
-			player->OnMouseButtonRelease(e.MouseButtonRelease.Button, point - m_Viewport.Min);
+
+	if (e.Type == EventType::KeyPress) {
+		if (e.KeyPress.KeyCode == Key::Escape) {
+			m_IsViewportInFocus = false;
+			Mouse::SetVisible(true);
+		}
+	}
+
+	if (e.Type == EventType::MouseButtonPress) {
+		if (e.MouseButtonPress.Button == Mouse::Button::Left && m_Viewport.Inside({ e.MouseButtonPress.x, e.MouseButtonPress.y })) {
+			m_IsViewportInFocus = true;
+			Mouse::SetVisible(false);
+		}
 	}
 }
 

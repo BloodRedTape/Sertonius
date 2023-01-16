@@ -12,6 +12,7 @@ private:
 	Vector2s m_LastOutputFramebufferSize;
 	AABB2s m_Viewport{ {}, {} };
 	Vector2s m_LastMousePosition;
+	bool m_IsViewportInFocus = true;
 public:
 	EditorEngine(Vector2s size, GameMode* game_mode);
 
