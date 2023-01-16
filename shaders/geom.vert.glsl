@@ -1,3 +1,4 @@
+#include "common.glsl"
 
 layout(location = 0)in vec3 a_ModelPosition;
 layout(location = 1)in vec3 a_Normal;
@@ -18,10 +19,6 @@ layout(binding = 0, row_major)uniform Camera{
 layout(binding = 1, row_major)uniform Model{
 	mat4 u_Model;
 };
-
-vec3 HomoToNoHomo3(vec4 homo) {
-	return vec3(homo.xyz / homo.w);
-}
 
 void main(){
 	vec4 world_position = u_Model * vec4(a_ModelPosition, 1.0);

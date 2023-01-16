@@ -1,4 +1,3 @@
-
 #include "common.glsl"
 
 layout(location = 0)in vec3 v_Normal;

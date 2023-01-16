@@ -1,4 +1,3 @@
-
 #include "common.glsl"
 
 layout(location = 0)in flat vec3 v_LightColor;

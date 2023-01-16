@@ -1,4 +1,3 @@
-
 layout(location = 0)in vec2 a_VertexPosition;
 layout(location = 1)in vec3 a_LightPosition;
 layout(location = 2)in vec3 a_LightColor;
