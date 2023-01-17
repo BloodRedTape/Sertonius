@@ -7,6 +7,31 @@
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/vector3.h>
 #include <core/print.hpp>
+#include <core/os/clock.hpp>
+
+class ScopeTimer {
+    Clock m_Clock;
+    const char* m_ScopeName;
+public:
+    ScopeTimer(const char *name):
+        m_ScopeName(name)
+    {}
+
+    ~ScopeTimer() {
+        Println("Scope: % took %ms", m_ScopeName, m_Clock.GetElapsedTime().AsMilliseconds());
+    }
+};
+
+#define CONCAT_IMPL(a, b) a##b
+#define CONCAT(a, b) CONCAT_IMPL(a, b)
+
+#if 0
+#define PROFILE_SCOPE(name) ScopeTimer CONCAT(__, SX_THIS_LINE) (name)
+#define PROFILE_FUNC() PROFILE_SCOPE(SX_THIS_FUNCTION)
+#else
+#define PROFILE_SCOPE(name)
+#define PROFILE_FUNC()
+#endif
 
 static inline Vector3f ToVector3(aiVector3D vector){
     return {vector.x, vector.y, vector.z};
@@ -16,7 +41,7 @@ static inline Vector2f ToVector2(aiVector3D vector){
 }
 
 Mesh ActorLoader::MakeMeshFromNode(const aiNode *node, String name) {
-
+    PROFILE_FUNC();
     List<Vertex> vertices;
     List<Index> indices;
     List<MeshSection> sections;
@@ -102,6 +127,7 @@ public:
     {}
 
     void LoadAlbedo(Material& out) {
+        PROFILE_FUNC();
         {
             aiColor3D color_value;
             if (m_Source->Get(AI_MATKEY_COLOR_DIFFUSE, color_value) == aiReturn_SUCCESS)
@@ -120,6 +146,7 @@ public:
     }
 
     void LoadNormal(Material& out) {
+        PROFILE_FUNC();
         if (m_Source->GetTextureCount(aiTextureType_HEIGHT)) {
             aiString local_texture_path;
             if (m_Source->GetTexture(aiTextureType_HEIGHT, 0, &local_texture_path) == aiReturn_SUCCESS) {
@@ -134,6 +161,7 @@ public:
 };
 
 MaterialHandle ActorLoader::GetMaterial(int material_index) {
+    PROFILE_FUNC();
     auto it = m_MaterialsMap.find(material_index);
 
     if (it == m_MaterialsMap.end()) {
@@ -153,6 +181,7 @@ MaterialHandle ActorLoader::GetMaterial(int material_index) {
 ActorLoader::ActorLoader(World* world, StringView filepath):
 	m_World(world)
 {
+    PROFILE_FUNC();
 	SX_ASSERT(File::Exists(filepath));
 
     m_FileDirectory = filepath;
@@ -162,7 +191,7 @@ ActorLoader::ActorLoader(World* world, StringView filepath):
     
     m_Importer = new Assimp::Importer();
     auto filedata = File::ReadEntire(filepath);
-    assert(filedata.HasValue());
+    SX_ASSERT(filedata.HasValue());
     String& data = filedata.Value();
     u32 flags = aiProcess_Triangulate | aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_CalcTangentSpace;
     m_Scene = m_Importer->ReadFileFromMemory(data.Data(), data.Size(), flags);
@@ -173,6 +202,7 @@ ActorLoader::~ActorLoader() {
 }
 
 WeakActorPtr<Actor> ActorLoader::Load() {
+    PROFILE_FUNC();
     auto actor = MakeActorFromNode(m_Scene->mRootNode);
     actor.Pin()->Rotation.x += 90;
     return actor;
