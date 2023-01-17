@@ -23,8 +23,10 @@ layout(binding = 1, row_major)uniform Model{
 void main(){
 	vec4 world_position = u_Model * vec4(a_ModelPosition, 1.0);
 	gl_Position = u_Projection * u_View * world_position;
-	v_Normal = normalize(mat3(u_Model) * a_Normal);
-	v_Tangent = normalize(mat3(u_Model) * a_Tangent);
+
+	mat3 normal_matrix = mat3(transpose(inverse(u_Model)));
+	v_Normal = normalize(normal_matrix * a_Normal);
+	v_Tangent = normalize(normal_matrix * a_Tangent);
 	v_WorldPosition = vec4(HomoToNoHomo3(world_position), 1.0);
 	v_Material = vec4(0);
 	v_UV = a_UV;

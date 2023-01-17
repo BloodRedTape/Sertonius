@@ -24,10 +24,14 @@ void main() {
 	
 	float light_length = length(v_LightPosition - fragment_position);
 	vec3 light_direction = normalize(v_LightPosition - fragment_position);
+	vec3 camera_direction = normalize(u_CameraPosition - fragment_position);
 
 	float attenuation = 1 - clamp(light_length / v_LightRadius, 0, 1);
 
-	float diffuse = dot(fragment_normal, light_direction) * attenuation;
+	float diffuse = max(dot(fragment_normal, light_direction), 0);
+	vec3 reflected_light_direction = reflect(-light_direction, fragment_normal);
 
-	f_Lighting = vec4(v_LightColor * diffuse, 1.0);
+	float specular = pow(max(dot(reflected_light_direction, camera_direction), 0), 32);
+
+	f_Lighting = vec4(v_LightColor * ((diffuse + specular) * attenuation), 1.0);
 }

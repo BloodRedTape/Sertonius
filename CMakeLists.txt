@@ -36,7 +36,9 @@ set(SAMPLE_SOURCES
     "sources/framework/assets_manager.cpp"
     "sources/framework/actor_loader.cpp"
     "sources/render/passes/lighting_pass.cpp"
- "sources/render/hot_reloader.cpp" "sources/render/common.cpp")
+    "sources/render/hot_reloader.cpp" 
+    "sources/render/common.cpp" 
+)
 
 set(SAMPLE_INCLUDE
     "./sources"
