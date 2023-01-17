@@ -17,6 +17,10 @@ struct LightVertex {
 };
 
 class LightingPass {
+	struct CameraUniform {
+		Vector3f u_CameraLocation;
+	};
+
 	const RenderTargets& m_RenderTargets;
 
 	UniquePtr<Sampler> m_Sampler{ Sampler::Create({}) };
@@ -28,6 +32,8 @@ class LightingPass {
 	UniquePtr<DescriptorSet, DescriptorSetDeleter> m_Set{ m_SetPool->Alloc(), {m_SetPool.Get()} };
 
 	UniquePtr<Buffer> m_LightGeometry{Buffer::Create(sizeof(LightVertex)*6, BufferMemoryType::DynamicVRAM, BufferUsageBits::VertexBuffer | BufferUsageBits::TransferDestination)};
+
+	UniformBuffer<CameraUniform> m_CameraUniformBuffer;
 public:
 	LightingPass(const RenderTargets& rts);
 

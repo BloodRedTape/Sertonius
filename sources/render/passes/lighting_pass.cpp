@@ -1,5 +1,6 @@
 #include "lighting_pass.hpp"
 #include "render/common.hpp"
+#include "render/hot_reloader.hpp"
 
 Array<VertexAttribute, 4> LightVertex::AttributesList{
 	VertexAttribute::Float32x2,
@@ -14,16 +15,13 @@ LightingPass::LightingPass(const RenderTargets& rts):
 		DescriptorSetLayout::Create({
 			ShaderBinding(0, 1, ShaderBindingType::Texture, ShaderStageBits::Fragment),
 			ShaderBinding(1, 1, ShaderBindingType::Texture, ShaderStageBits::Fragment),
+			ShaderBinding(2, 1, ShaderBindingType::UniformBuffer, ShaderStageBits::Fragment),
 		})
 	)
 {
-	FixedList<const Shader*, 2> shaders;
-	shaders.Add(Shader::Create(ShaderStageBits::Vertex, File::ReadEntire("shaders/light.vert.glsl").Value(), DefaultCompileOptions));
-	shaders.Add(Shader::Create(ShaderStageBits::Fragment, File::ReadEntire("shaders/light.frag.glsl").Value(), DefaultCompileOptions));
-
-	GraphicsPipelineProperties props;
+	
+	HotReloadGraphicsPipelineProperties props;
 	props.VertexAttributes = LightVertex::AttributesList;
-	props.Shaders = shaders;
 	props.BlendFunction = BlendFunction::Add;
 	props.SrcBlendFactor = BlendFactor::One;
 	props.DstBlendFactor = BlendFactor::One;
@@ -31,10 +29,14 @@ LightingPass::LightingPass(const RenderTargets& rts):
 	props.DepthFunction = DepthFunction::Less;
 	props.Pass = m_RenderTargets.LightingRenderPass.Get();
 
-	m_Pipeline = GraphicsPipeline::Create(props);
+	props.ShaderProperties.Add({ ShaderStageBits::Vertex, "shaders/light.vert.glsl", DefaultCompileOptions});
+	props.ShaderProperties.Add({ ShaderStageBits::Fragment, "shaders/light.frag.glsl", DefaultCompileOptions});
 
-	for (auto shader : shaders)
-		delete shader;
+	HotReloader::Get().Add(Move(props), [this](GraphicsPipeline* pipeline) {
+		m_Pipeline = pipeline;
+	});
+
+	SX_ASSERT(m_Pipeline);
 }
 
 List<LightVertex> BuildLightVertexData(const Scene& scene) {
@@ -85,6 +87,7 @@ List<LightVertex> BuildLightVertexData(const Scene& scene) {
 void LightingPass::CmdRender(CommandBuffer * cmd_buffer, const Scene & scene){
 	m_Set->UpdateTextureBinding(0, 0, m_RenderTargets.Position.Get(), m_Sampler.Get());
 	m_Set->UpdateTextureBinding(1, 0, m_RenderTargets.Normal.Get(), m_Sampler.Get());
+	m_Set->UpdateUniformBinding(2, 0, m_CameraUniformBuffer);
 	
 	auto light_vertex_data = BuildLightVertexData(scene);
 
@@ -92,6 +95,8 @@ void LightingPass::CmdRender(CommandBuffer * cmd_buffer, const Scene & scene){
 		m_LightGeometry->Realloc(light_vertex_data.Size() * sizeof(light_vertex_data[0]));
 	}
 	m_LightGeometry->Copy(light_vertex_data.Data(), light_vertex_data.Size() * sizeof(light_vertex_data[0]));
+
+	m_CameraUniformBuffer.CmdUpdate(*cmd_buffer, { scene.Camera.Position });
 
 	cmd_buffer->Bind(m_Pipeline.Get());
 	cmd_buffer->Bind(m_Set.Get());

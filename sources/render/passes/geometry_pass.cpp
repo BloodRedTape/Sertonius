@@ -1,6 +1,7 @@
 #include "render/passes/geometry_pass.hpp"
 #include "framework/assets_manager.hpp"
 #include "render/common.hpp"
+#include "render/hot_reloader.hpp"
 #include <core/fixed_list.hpp>
 #include <core/os/file.hpp>
 
@@ -20,13 +21,8 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 	)
 {
 
-	FixedList<const Shader*, 2> shaders;
-	shaders.Add(Shader::Create(ShaderStageBits::Vertex, File::ReadEntire("shaders/geom.vert.glsl").Value(), DefaultCompileOptions));
-	shaders.Add(Shader::Create(ShaderStageBits::Fragment, File::ReadEntire("shaders/geom.frag.glsl").Value(), DefaultCompileOptions));
-
-	GraphicsPipelineProperties props;
+	HotReloadGraphicsPipelineProperties props;
 	props.VertexAttributes = Vertex::AttributesList;
-	props.Shaders = shaders;
 	props.BlendFunction = BlendFunction::Add;
 	props.SrcBlendFactor = BlendFactor::SrcAlpha;
 	props.DstBlendFactor = BlendFactor::OneMinusSrcAlpha;
@@ -34,10 +30,12 @@ GeometryPass::GeometryPass(const RenderTargets& targets) :
 	props.DepthFunction = DepthFunction::Less;
 	props.Pass = targets.GeometryRenderPass.Get();
 
-	m_Pipeline = GraphicsPipeline::Create(props);
-
-	for (auto shader : shaders)
-		delete shader;
+	props.ShaderProperties.Add({ ShaderStageBits::Vertex, "shaders/geom.vert.glsl", DefaultCompileOptions});
+	props.ShaderProperties.Add({ ShaderStageBits::Fragment, "shaders/geom.frag.glsl", DefaultCompileOptions});
+	
+	HotReloader::Get().Add(Move(props), [this](GraphicsPipeline *pipeline) {
+		m_Pipeline = pipeline;
+	});
 }
 
 void GeometryPass::CmdRender(CommandBuffer* cmd_buffer, const Scene &scene){

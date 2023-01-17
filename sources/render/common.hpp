@@ -3,4 +3,4 @@
 #include <graphics/api/shader.hpp>
 
 
-#define DefaultCompileOptions {ShaderLang::GLSL, ConstSpan<StringView>{ StringView("shaders") }}
+extern ShaderCompileOptions DefaultCompileOptions;

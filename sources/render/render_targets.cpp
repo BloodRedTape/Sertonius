@@ -98,6 +98,10 @@ RenderTargets::RenderTargets(Vector2s size):
 {}
 
 void RenderTargets::OnFramebufferRecreate(Vector2s size){
+	auto light = Move(LightingRenderPass);
+	auto geom = Move(GeometryRenderPass);
 	this->~RenderTargets();
 	new (this) RenderTargets(size);
+	LightingRenderPass = Move(light);
+	GeometryRenderPass = Move(geom);
 }

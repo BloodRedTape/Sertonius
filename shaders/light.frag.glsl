@@ -13,6 +13,10 @@ vec3 Grayscale(vec3 color) {
 	return vec3((color.r + color.g + color.b) / 3);
 }
 
+layout(binding = 2)uniform Camera {
+	vec3 u_CameraPosition;
+};
+
 void main() {
 	const vec2 UV = gl_FragCoord.xy / textureSize(u_Positions, 0);
 	vec3 fragment_position = texture(u_Positions, UV).xyz;

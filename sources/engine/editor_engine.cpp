@@ -1,4 +1,5 @@
 #include "engine/editor_engine.hpp"
+#include "render/hot_reloader.hpp"
 #include <core/print.hpp>
 
 EditorEngine::EditorEngine(Vector2s size, GameMode* game_mode):
@@ -104,6 +105,11 @@ void EditorEngine::OnEvent(const Event& e){
 			m_IsViewportInFocus = true;
 			Mouse::SetVisible(false);
 		}
+	}
+
+	if (e.Type == EventType::KeyPress) {
+		if (e.KeyPress.KeyCode == Key::R)
+			HotReloader::Get().Realod();
 	}
 }
 
