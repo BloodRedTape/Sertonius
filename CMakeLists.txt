@@ -49,3 +49,5 @@ target_link_libraries(Sample StraitXBase StraitXImGui assimp-fbxloader)
 target_include_directories(Sample
     PUBLIC ${SAMPLE_INCLUDE}
 )
+
+target_compile_features(Sample PRIVATE cxx_std_17)

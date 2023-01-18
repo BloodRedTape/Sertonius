@@ -105,8 +105,10 @@ WeakActorPtr<Actor> ActorLoader::MakeActorFromNode(const class aiNode* node) {
     actor_ptr.Pin()->Rotation = Math::Deg(ToVector3(rotation));
     actor_ptr.Pin()->Scale = ToVector3(scaling);
 
-    for (int i = 0; i < node->mNumChildren; i++)
-        actor_ptr.Pin()->AttachChild(MakeActorFromNode(node->mChildren[i]).Pin());
+    for (int i = 0; i < node->mNumChildren; i++) {
+        auto actor = MakeActorFromNode(node->mChildren[i]);
+        actor_ptr.Pin()->AttachChild(actor.Pin());
+    }
 
     return actor_ptr;
 }
